@@ -7,8 +7,8 @@
     <title>Kanban</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/kanban.css" rel="stylesheet">
+    <script src="js/Sortable.js"></script>
     <script src="js/vue.js"></script>
-    <script src="js/vue.drag-and-drop.js"></script>
   </head>
   <body>
     <script type="text/x-template" id="kanban-template">
@@ -18,7 +18,7 @@
     </script>
 
     <script type="text/x-template" id="task-template">
-      <div class="task">
+      <div class="task" :data-id="model.id" draggable=true>
         <h2>{{model.id}} - {{model.title}}</h2>
       </div>
     </script>
@@ -29,8 +29,8 @@
         <h2 v-if="title" class="column-title">{{title}}</h2>
         <div class="k-list vertical">
           <slot/>
-          <div v-if="contents">
-            <component v-for="content in contents" :is="content.type" :model="content" v-drag-and-drop drop="handleDrop"></component>
+          <div @dragstart="handleDragStart" @dragover.prevent class="contents" @drop.prevent="handleDrop" v-el:contents>
+            <component v-if="contents" v-for="content in contents" :is="content.type" :model="content"></component>
           </div>  
         </div>
       </div>
