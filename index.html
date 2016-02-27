@@ -24,16 +24,20 @@
     </script>
 
 
-    <script type="text/x-template" id="container-template">
+    <script type="text/x-template" id="column-template">
       <div class="k-container">
         <h2 v-if="title" class="column-title">{{title}}</h2>
         <div class="k-list vertical">
           <slot/>
-          <div @dragstart="handleDragStart" @dragover.prevent class="contents" @drop.prevent="handleDrop" v-el:contents>
-            <component v-if="contents" v-for="content in contents" :is="content.type" :model="content"></component>
-          </div>  
+          <container :contents="contents"/>  
         </div>
       </div>
+    </script>
+
+    <script type="text/x-template" id="container-template">
+      <div @dragstart="handleDragStart" @dragover.prevent class="contents" @drop.prevent="handleDrop" v-el:contents>
+        <component v-if="contents" v-for="content in contents" :is="content.type" :model="content"></component>
+      </div>  
     </script>
 
     <script type="text/x-template" id="line-template">

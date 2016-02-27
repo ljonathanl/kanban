@@ -1,14 +1,10 @@
 var dragTemp = {};
 
 function getContentIndexById(id, contents) {
-  var index = -1;
   for (var i = 0; i < contents.length; i++) {
-    if (contents[i].id == id) {
-      index = i;
-      break;
-    }
+    if (contents[i].id == id) return i;
   }
-  return index;
+  return -1;
 }
 
 function getDropIndex(event, vm) {
@@ -36,17 +32,28 @@ Vue.component('task', {
   }
 })
 
+Vue.component('line', {
+  template: '#line-template',
+  props: {
+    title: String
+  },
+})
 
 Vue.component('column', {
+  template: '#column-template',
+  props: {
+    title: String,
+    contents: Array,
+  },
+})
+
+Vue.component('container', {
   template: '#container-template',
   props: {
-    contents: Array,
-    title: String
+    contents: Array
   },
   methods: {
     handleDragStart: function(event) {
-      // console.log(event);
-      // console.log(event.target.dataset.id);
       var index = getContentIndexById(event.target.dataset.id, this.contents);
       console.log(index);
       dragTemp.container = this.contents;
@@ -56,23 +63,11 @@ Vue.component('column', {
       console.log(event);
       var lastContainer = dragTemp.container;
       var draggedObject = dragTemp.draggedObject;
-      // console.dir(dragTemp.container);
-      // console.dir(draggedObject);
       var index = getDropIndex(event, this);
       lastContainer.$remove(draggedObject);
       this.contents.splice(index, 0, draggedObject);
       dragTemp = {};
     }
-  },
-/*  ready: function() {
-    var sortable = Sortable.create(this.$els.contents);
-  }*/
-})
-
-Vue.component('line', {
-  template: '#line-template',
-  props: {
-    title: String
   },
 })
 
