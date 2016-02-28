@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kanban</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/kanban.css" rel="stylesheet">
+    <script src="js/Sortable.js"></script>
+    <script src="js/vue.js"></script>
+  </head>
+  <body>
+    <script type="text/x-template" id="kanban-template">
+        <div class="k-list horizontal">
+          <slot/>
+        </div>
+    </script>
+
+    <script type="text/x-template" id="task-template">
+      <div class="task" :data-id="model.id" draggable=true>
+        <h2>{{model.id}} - {{model.title}}</h2>
+      </div>
+    </script>
+
+
+    <script type="text/x-template" id="column-template">
+      <div class="k-container">
+        <h2 v-if="title" class="column-title">{{title}}</h2>
+        <div class="k-list vertical">
+          <slot/>
+          <container :contents="contents"/>  
+        </div>
+      </div>
+    </script>
+
+    <script type="text/x-template" id="container-template">
+      <div @dragstart="handleDragStart" @dragover.prevent class="contents" @drop.prevent="handleDrop" v-el:contents>
+        <component v-if="contents" v-for="content in contents" :is="content.type" :model="content"></component>
+      </div>  
+    </script>
+
+    <script type="text/x-template" id="line-template">
+      <div class="k-line">
+        <h2 v-if="title" class="line-title">{{title}}</h2>
+        <div class="k-list horizontal">
+          <slot/>
+        </div>
+      </div>
+    </script>
+
+    <kanban>
+      <column title="backlog" style="width: 15%">
+        <column title="evolution" class="backlog-category" :contents="backlog.evolution"></column>
+        <column title="bug" class="backlog-category" :contents="backlog.bug"></column>
+        <column title="technical" class="backlog-category" :contents="backlog.technical"></column>
+      </column>
+      <column title="todo" style="width: 15%" :contents="todo"></column>
+      <column title="dev" direction="vertical" style="width: 40%">
+        <line title="back">
+          <column title="ongoing" :contents="development.back.ongoing"></column>  
+          <column title="test" :contents="development.back.test"></column>
+        </line>
+        <line title="front">
+          <column title="ongoing" :contents="development.front.ongoing"></column>  
+          <column title="test" :contents="development.front.test"></column>
+        </line>
+        <line title="cms">
+          <column title="ongoing" :contents="development.cms.ongoing"></column>  
+          <column title="test" :contents="development.cms.test"></column>
+        </line>
+        <line title="other">
+          <column title="ongoing" :contents="development.other.ongoing"></column>  
+          <column title="test" :contents="development.other.test"></column>
+        </line>
+      </column>
+      <column title="done" style="width: 15%" :contents="development.done"></column>
+      <column title="qualif" style="width: 15%" :contents="qualification"></column>
+    </kanban>
+
+  </body>
+  <script src="js/kanban.js"></script>
+</html>
