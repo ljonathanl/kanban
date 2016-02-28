@@ -7,8 +7,8 @@
     <title>Kanban</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/kanban.css" rel="stylesheet">
-    <script src="js/Sortable.js"></script>
     <script src="js/vue.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
   </head>
   <body>
     <script type="text/x-template" id="kanban-template">
@@ -29,7 +29,7 @@
         <h2 v-if="title" class="column-title">{{title}}</h2>
         <div class="k-list vertical">
           <slot/>
-          <container :contents="contents"/>  
+          <container :path="model.path" :contents="model.contents"/>  
         </div>
       </div>
     </script>
@@ -51,33 +51,32 @@
 
     <kanban>
       <column title="backlog" style="width: 15%">
-        <column title="evolution" class="backlog-category" :contents="backlog.evolution"></column>
-        <column title="bug" class="backlog-category" :contents="backlog.bug"></column>
-        <column title="technical" class="backlog-category" :contents="backlog.technical"></column>
+        <column title="evolution" class="backlog-category" :model="backlog.evolution"></column>
+        <column title="bug" class="backlog-category" :model="backlog.bug"></column>
+        <column title="technical" class="backlog-category" :model="backlog.technical"></column>
       </column>
-      <column title="todo" style="width: 15%" :contents="todo"></column>
+      <column title="todo" style="width: 15%" :model="todo"></column>
       <column title="dev" direction="vertical" style="width: 40%">
         <line title="back">
-          <column title="ongoing" :contents="development.back.ongoing"></column>  
-          <column title="test" :contents="development.back.test"></column>
+          <column title="ongoing" :model="development.back.ongoing"></column>  
+          <column title="test" :model="development.back.test"></column>
         </line>
         <line title="front">
-          <column title="ongoing" :contents="development.front.ongoing"></column>  
-          <column title="test" :contents="development.front.test"></column>
+          <column title="ongoing" :model="development.front.ongoing"></column>  
+          <column title="test" :model="development.front.test"></column>
         </line>
         <line title="cms">
-          <column title="ongoing" :contents="development.cms.ongoing"></column>  
-          <column title="test" :contents="development.cms.test"></column>
+          <column title="ongoing" :model="development.cms.ongoing"></column>  
+          <column title="test" :model="development.cms.test"></column>
         </line>
         <line title="other">
-          <column title="ongoing" :contents="development.other.ongoing"></column>  
-          <column title="test" :contents="development.other.test"></column>
+          <column title="ongoing" :model="development.other.ongoing"></column>  
+          <column title="test" :model="development.other.test"></column>
         </line>
       </column>
-      <column title="done" style="width: 15%" :contents="development.done"></column>
-      <column title="qualif" style="width: 15%" :contents="qualification"></column>
+      <column title="done" style="width: 15%" :model="development.done"></column>
     </kanban>
-
+    <script src="js/kanban.js"></script>
   </body>
-  <script src="js/kanban.js"></script>
+  
 </html>
