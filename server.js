@@ -13,8 +13,8 @@ app.get('/', function (req, res) {
 app.use(express.static('public'));
 
 io.on('connection', function (socket) {
-  socket.emit('news', { hello: 'world' });
-  socket.on('my other event', function (data) {
+  //socket.emit('news', { hello: 'world' });
+  socket.on('action', function (data) {
     console.log(data);
   });
 });

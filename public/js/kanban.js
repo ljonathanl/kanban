@@ -68,10 +68,46 @@ var kanban = {
   }
 };
 
+var items = {};
+
+function findItems(kanban) {
+  for (var k in kanban) {
+    console.log(k);
+    if (k == 'contents') {
+      var contents = kanban[k];
+      for (var i = 0; i < contents.length; i++) {
+        var item = contents[i];
+        items[item.id] = item;
+      }
+    } else if (typeof kanban[k] === 'object') {
+      findItems(kanban[k]);
+    }
+  }
+} 
+
+findItems(kanban);
+
+var actions = {
+  move: function(action) {
+    var movedItem = items[id];
+    var lastContainer = kanban[action.from.path].contents;
+    var newContainer = kanban[action.to.path].contents;
+    lastContainer.$remove(moved);
+    newContainer.splice(action.to.index, 0, movedItem);
+  }
+}
+
+var emit = {
+  move: function(action) {
+    socket.emit('action', { type: 'move', action: action });
+  }
+}
+
 var socket = io.connect('http://localhost');
-socket.on('news', function (data) {
+socket.on('action', function (data) {
   //console.log(data);
   //socket.emit('my other event', { my: 'data' });
+  actions[data.type](data.action);
 });
 
 var dragTemp = {};
@@ -131,20 +167,22 @@ Vue.component('container', {
   },
   methods: {
     handleDragStart: function(event) {
-      var index = getContentIndexById(event.target.dataset.id, this.contents);
-      console.log(index);
-      dragTemp.container = this.contents;
-      dragTemp.draggedObject = this.contents[index];
+      dragTemp.lastContainer = this.path;
+      dragTemp.item = event.target.dataset.id;
     },
     handleDrop: function(event) {
       console.log(event);
-      var lastContainer = dragTemp.container;
-      var draggedObject = dragTemp.draggedObject;
+      var lastContainer = dragTemp.lastContainer;
+      var item = dragTemp.item;
       var index = getDropIndex(event, this);
-      lastContainer.$remove(draggedObject);
-      this.contents.splice(index, 0, draggedObject);
+      
       dragTemp = {};
-
+      emit.move(
+        {
+          id: item,
+          from: lastContainer, 
+          to: {path: this.path, index: index}  
+        });
     }
   },
 })
