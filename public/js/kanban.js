@@ -65,7 +65,19 @@ var kanban = {
       path: 'development.done',
       contents: [{type: 'task', title: 'My super task', id: 'tsk4'}]
     }
-  }
+  },
+  qualification: {
+      path: 'qualification',
+      contents: [],
+  },
+  preproduction: {
+      path: 'preproduction',
+      contents: [],
+  },
+  production: {
+      path: 'production',
+      contents: [],
+  },   
 };
 
 var items = {};
@@ -128,7 +140,6 @@ function getContentIndexById(id, contents) {
 }
 
 function getDropIndex(event, vm) {
-  console.log(event.target);
   var element = event.target
   while (element != vm.$els.contents) {
     if (element.dataset.id != undefined) {
@@ -177,17 +188,18 @@ Vue.component('container', {
     handleDragStart: function(event) {
       dragTemp.lastContainer = this.path;
       dragTemp.item = event.target.dataset.id;
+      dragTemp.lastIndex = getContentIndexById(event.target.dataset.id, this.contents);
     },
     handleDrop: function(event) {
-      console.log(event);
       var lastContainer = dragTemp.lastContainer;
+      var lastIndex = dragTemp.lastIndex;
       var item = dragTemp.item;
       var index = getDropIndex(event, this);
       
       dragTemp = {};
       var action = {
         id: item,
-        from: {path: lastContainer}, 
+        from: {path: lastContainer, index: lastIndex}, 
         to: {path: this.path, index: index}  
       };
 
@@ -197,12 +209,45 @@ Vue.component('container', {
   },
 })
 
-new Vue({
-  el: 'body',
-  data: kanban
+var Backlog = Vue.component('backlog', {
+  template: '#backlog-template',
+  data: function() {
+    return kanban;
+  }
 })
 
+var Development = Vue.component('development', {
+  template: '#development-template',
+  data: function() {
+    return kanban;
+  }
+})
 
+var Release = Vue.component('release', {
+  template: '#release-template',
+  data: function() {
+    return kanban;
+  }
+})
 
+var App = Vue.extend({});
 
+var router = new VueRouter();
+
+router.map({
+    '/': {
+        component: Development
+    },
+    '/backlog': {
+        component: Backlog
+    },
+    '/development': {
+        component: Development
+    },
+    '/release': {
+        component: Release
+    },
+});
+
+router.start(App, '#app');
 

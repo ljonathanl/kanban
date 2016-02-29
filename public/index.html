@@ -5,9 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Kanban</title>
-    <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/kanban.css" rel="stylesheet">
     <script src="js/vue.js"></script>
+    <script src="js/vue-router.js"></script>
     <script src="/socket.io/socket.io.js"></script>
   </head>
   <body>
@@ -49,33 +49,61 @@
       </div>
     </script>
 
-    <kanban>
-      <column title="backlog" style="width: 15%">
-        <column title="evolution" class="backlog-category" :model="backlog.evolution"></column>
-        <column title="bug" class="backlog-category" :model="backlog.bug"></column>
-        <column title="technical" class="backlog-category" :model="backlog.technical"></column>
-      </column>
-      <column title="todo" style="width: 15%" :model="todo"></column>
-      <column title="dev" direction="vertical" style="width: 40%">
-        <line title="back">
-          <column title="ongoing" :model="development.back.ongoing"></column>  
-          <column title="test" :model="development.back.test"></column>
+    <script type="text/x-template" id="backlog-template">
+      <kanban>
+        <line title="backlog" style="width: 70%">
+          <column title="evolution" class="backlog-category" :model="backlog.evolution"></column>
+          <column title="bug" class="backlog-category" :model="backlog.bug"></column>
+          <column title="technical" class="backlog-category" :model="backlog.technical"></column>
         </line>
-        <line title="front">
-          <column title="ongoing" :model="development.front.ongoing"></column>  
-          <column title="test" :model="development.front.test"></column>
-        </line>
-        <line title="cms">
-          <column title="ongoing" :model="development.cms.ongoing"></column>  
-          <column title="test" :model="development.cms.test"></column>
-        </line>
-        <line title="other">
-          <column title="ongoing" :model="development.other.ongoing"></column>  
-          <column title="test" :model="development.other.test"></column>
-        </line>
-      </column>
-      <column title="done" style="width: 15%" :model="development.done"></column>
-    </kanban>
+        <column title="todo" style="width: 30%" :model="todo"></column>
+      </kanban>  
+    </script>
+
+    <script type="text/x-template" id="development-template">
+      <kanban>
+        <column title="todo" style="width: 15%" :model="todo"></column>
+        <column title="dev" direction="vertical" style="width: 40%">
+          <line title="back">
+            <column title="ongoing" :model="development.back.ongoing"></column>  
+            <column title="test" :model="development.back.test"></column>
+          </line>
+          <line title="front">
+            <column title="ongoing" :model="development.front.ongoing"></column>  
+            <column title="test" :model="development.front.test"></column>
+          </line>
+          <line title="cms">
+            <column title="ongoing" :model="development.cms.ongoing"></column>  
+            <column title="test" :model="development.cms.test"></column>
+          </line>
+          <line title="other">
+            <column title="ongoing" :model="development.other.ongoing"></column>  
+            <column title="test" :model="development.other.test"></column>
+          </line>
+        </column>
+        <column title="done" style="width: 40%" :model="development.done"></column>
+      </kanban>
+    </script>
+
+    <script type="text/x-template" id="release-template">
+      <kanban>
+        <column title="done" style="width: 40%" :model="development.done"></column>
+        <column title="qualification" style="width: 20%" :model="qualification"></column>
+        <column title="preproduction" style="width: 20%" :model="preproduction"></column>
+        <column title="production" style="width: 20%" :model="production"></column>
+      </kanban>
+    </script>
+
+
+
+    <div id="app">
+      <p>
+        <a v-link="{ path: '/backlog' }">Backlog</a>
+        <a v-link="{ path: '/development' }">Development</a>
+        <a v-link="{ path: '/release' }">Release</a>
+      </p>
+      <router-view></router-view>
+    </div>  
     <script src="js/kanban.js"></script>
   </body>
   
