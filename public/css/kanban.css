@@ -61,4 +61,5 @@ html, body {
 
 .contents {
 	min-height: 200px;
+	padding-bottom: 30px;
 }
