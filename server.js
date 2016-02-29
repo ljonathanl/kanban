@@ -1,3 +1,4 @@
+var kanban = require('./data');
 var express = require('express');
 var app = express();
 var server = require('http').Server(app);
@@ -13,7 +14,7 @@ app.get('/', function (req, res) {
 app.use(express.static('public'));
 
 io.on('connection', function (socket) {
-  //socket.emit('news', { hello: 'world' });
+  socket.emit('data', kanban);
   socket.on('action', function (data) {
   	console.log('action', data.type);
     socket.broadcast.emit('action', data);
