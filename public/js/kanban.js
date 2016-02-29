@@ -57,12 +57,12 @@ var kanban = {
         contents: [],
       },
       test: {
-        path: 'development.other.ongoing',
+        path: 'development.other.test',
         contents: []
       }
     },
     done: {
-      path: 'done',
+      path: 'development.done',
       contents: [{type: 'task', title: 'My super task', id: 'tsk4'}]
     }
   }
@@ -72,7 +72,6 @@ var items = {};
 
 function findItems(kanban) {
   for (var k in kanban) {
-    console.log(k);
     if (k == 'contents') {
       var contents = kanban[k];
       for (var i = 0; i < contents.length; i++) {
@@ -87,12 +86,21 @@ function findItems(kanban) {
 
 findItems(kanban);
 
+function getContents(path) {
+  var paths = path.split(".");
+  var item = kanban;
+  for (var i = 0; i < paths.length; i++) {
+    item = item[paths[i]];
+  }
+  return item.contents;
+}
+
 var actions = {
   move: function(action) {
-    var movedItem = items[id];
-    var lastContainer = kanban[action.from.path].contents;
-    var newContainer = kanban[action.to.path].contents;
-    lastContainer.$remove(moved);
+    var movedItem = items[action.id];
+    var lastContainer = getContents(action.from.path);
+    var newContainer = getContents(action.to.path);
+    lastContainer.$remove(movedItem);
     newContainer.splice(action.to.index, 0, movedItem);
   }
 }
@@ -103,9 +111,9 @@ var emit = {
   }
 }
 
-var socket = io.connect('http://localhost');
+var socket = io.connect('http://localhost:8080');
 socket.on('action', function (data) {
-  //console.log(data);
+  console.log(data);
   //socket.emit('my other event', { my: 'data' });
   actions[data.type](data.action);
 });
@@ -177,12 +185,14 @@ Vue.component('container', {
       var index = getDropIndex(event, this);
       
       dragTemp = {};
-      emit.move(
-        {
-          id: item,
-          from: lastContainer, 
-          to: {path: this.path, index: index}  
-        });
+      var action = {
+        id: item,
+        from: {path: lastContainer}, 
+        to: {path: this.path, index: index}  
+      };
+
+      emit.move(action);
+      actions.move(action);
     }
   },
 })
