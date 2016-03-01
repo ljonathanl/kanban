@@ -1,35 +1,88 @@
-var data = {kanban:{}};
+var kanban = {
+  backlog_evolution: 
+  {
+    contents: []
+  }, 
+  backlog_bug: 
+  {
+    contents: []
+  },
+  backlog_technical: 
+  {
+    contents: []
+  },
+  todo: 
+  {
+    contents: [{type: 'task', title: 'My super task', id: 'tsk1'}, {type: 'task', title: 'My super task 2', id: 'tsk2'}]
+  },
+  development_back_ongoing: 
+  {
+    contents: [],
+  },
+  development_back_test: 
+  {
+    contents: []
+  },
+  development_front_ongoing: 
+  {
+    contents: []
+  },
+  development_front_test: 
+  {
+    contents: []
+  },
+  development_cms_ongoing: 
+  {
+    contents: []
+  },
+  development_cms_test: 
+  {
+    contents: []
+  },
+  development_other_ongoing: 
+  {
+    contents: []
+  },
+  development_other_test: 
+  {
+    contents: []
+  },
+  development_done: {
+    contents: []
+  },
+  qualification: {
+    contents: []
+  },
+  preproduction: {
+    contents: []
+  },
+  production: {
+    contents: []
+  }  
+};
 
 var items = {};
 
 function findItems(kanban) {
   for (var k in kanban) {
-    if (k == 'contents') {
-      var contents = kanban[k];
+    var container = kanban[k];
+    var contents = container.contents;
+    if (contents) {
       for (var i = 0; i < contents.length; i++) {
         var item = contents[i];
         items[item.id] = item;
       }
-    } else if (typeof kanban[k] === 'object') {
-      findItems(kanban[k]);
     }
   }
 } 
 
-function getContents(path) {
-  var paths = path.split(".");
-  var item = kanban;
-  for (var i = 0; i < paths.length; i++) {
-    item = item[paths[i]];
-  }
-  return item.contents;
-}
+findItems(kanban);
 
 var actions = {
   move: function(action) {
     var movedItem = items[action.id];
-    var lastContainer = getContents(action.from.path);
-    var newContainer = getContents(action.to.path);
+    var lastContainer = kanban[action.from.name].contents;
+    var newContainer = kanban[action.to.name].contents;
     lastContainer.$remove(movedItem);
     newContainer.splice(action.to.index, 0, movedItem);
   }
@@ -41,16 +94,6 @@ var emit = {
   }
 }
 
-var dones = [];
-
-function activate(done) {
-  if (data.kanban) {
-    done();
-  } else {
-    dones.push(done);
-  }
-}
-
 var socket = io.connect('http://localhost:8080');
 socket.on('action', function (data) {
   console.log(data);
@@ -58,12 +101,8 @@ socket.on('action', function (data) {
   actions[data.type](data.action);
 });
 socket.on('data', function (kanban) {
-  data.kanban = kanban;
-  findItems(kanban);
-  for (var i = 0; i < dones.length; i++) {
-     dones[i]();
-  }
-  dones = [];
+//  data.kanban = kanban;
+//  findItems(kanban);
 });
 
 var dragTemp = {};
@@ -114,20 +153,25 @@ Vue.component('line', {
 Vue.component('column', {
   template: '#column-template',
   props: {
-    title: String,
-    model: Object,
+    id: String,
+    title: String
   },
+  computed: {
+    model: function() {
+      return kanban[this.id];
+    }
+  }
 })
 
 Vue.component('container', {
   template: '#container-template',
   props: {
-    path: String,
+    name: String,
     contents: Array
   },
   methods: {
     handleDragStart: function(event) {
-      dragTemp.lastContainer = this.path;
+      dragTemp.lastContainer = this.name;
       dragTemp.item = event.target.dataset.id;
       dragTemp.lastIndex = getContentIndexById(event.target.dataset.id, this.contents);
     },
@@ -140,8 +184,8 @@ Vue.component('container', {
       dragTemp = {};
       var action = {
         id: item,
-        from: {path: lastContainer, index: lastIndex}, 
-        to: {path: this.path, index: index}  
+        from: {name: lastContainer, index: lastIndex}, 
+        to: {name: this.name, index: index}  
       };
 
       emit.move(action);
@@ -152,29 +196,21 @@ Vue.component('container', {
 
 var Backlog = Vue.component('backlog', {
   template: '#backlog-template',
-  activate: activate,
-  data: function() {
-    return data;
-  }
 })
 
 var Development = Vue.component('development', {
   template: '#development-template',
-  activate: activate,
-  data: function() {
-    return data;
-  }
 })
 
 var Release = Vue.component('release', {
   template: '#release-template',
-  activate: activate,
-  data: function() {
-    return data;
-  }
 })
 
-var App = Vue.extend({});
+var App = Vue.extend({
+  data: function() {
+    return kanban;
+  }  
+});
 
 var router = new VueRouter();
 

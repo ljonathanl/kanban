@@ -1,83 +1,64 @@
 var kanban = {
-  backlog: {
-    evolution: {
-      path: 'backlog.evolution',
-      contents: [],
-    }, 
-    bug: {
-      path: 'backlog.bug',
-      contents: [
-        {type: 'task', title: 'My super task', id: 'tsk1'},
-        {type: 'task', title: 'My super task 2', id: 'tsk2'},
-      ],
-    },
-    technical: {
-      path: 'backlog.technical',
-      contents: []
-    }
+  backlog_evolution: 
+  {
+    contents: []
+  }, 
+  backlog_bug: 
+  {
+    contents: [{type: 'task', title: 'My super task', id: 'tsk1'}, {type: 'task', title: 'My super task 2', id: 'tsk2'}]
   },
-  todo: {
-      path: 'todo',
-      contents: [],
+  backlog_technical: 
+  {
+    contents: []
   },
-  development: {
-    back: {
-      ongoing: {
-        path: 'development.back.ongoing',
-        contents: [{type: 'task', title: 'My super task', id: 'tsk3'}],
-      },
-      test: {
-        path: 'development.back.test',
-        contents: []
-      }
-    },
-    front: {
-      ongoing: {
-        path: 'development.front.ongoing',
-        contents: [],
-      },
-      test: {
-        path: 'development.front.test',
-        contents: []
-      }
-    },
-    cms: {
-      ongoing: {
-        path: 'development.cms.ongoing',
-        contents: [],
-      },
-      test: {
-        path: 'development.cms.test',
-        contents: [{type: 'task', title: 'My super task', id: 'tsk5'}]
-      }
-    },
-    other: {
-      ongoing: {
-        path: 'development.other.ongoing',
-        contents: [],
-      },
-      test: {
-        path: 'development.other.test',
-        contents: []
-      }
-    },
-    done: {
-      path: 'development.done',
-      contents: [{type: 'task', title: 'My super task', id: 'tsk4'}]
-    }
+  todo: 
+  {
+    contents: []
+  },
+  development_back_ongoing: 
+  {
+    contents: [{type: 'task', title: 'My super task', id: 'tsk3'}],
+  },
+  development_back_test: 
+  {
+    contents: []
+  },
+  development_front_ongoing: 
+  {
+    contents: []
+  },
+  development_front_test: 
+  {
+    contents: []
+  },
+  development_cms_ongoing: 
+  {
+    contents: []
+  },
+  development_cms_test: 
+  {
+    contents: [{type: 'task', title: 'My super task', id: 'tsk5'}]
+  },
+  development_other_ongoing: 
+  {
+    contents: []
+  },
+  development_other_test: 
+  {
+    contents: []
+  },
+  development_done: {
+    contents: [{type: 'task', title: 'My super task', id: 'tsk4'}]
   },
   qualification: {
-      path: 'qualification',
-      contents: [],
+    contents: []
   },
   preproduction: {
-      path: 'preproduction',
-      contents: [],
+    contents: []
   },
   production: {
-      path: 'production',
-      contents: [],
-  },   
+    contents: []
+  }  
 };
 
 module.exports = exports = kanban;

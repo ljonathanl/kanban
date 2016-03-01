@@ -29,7 +29,7 @@
         <h2 v-if="title" class="column-title">{{title}}</h2>
         <div class="k-list vertical">
           <slot/>
-          <container :path="model.path" :contents="model.contents"/>  
+          <container :name="id" :contents="model.contents"/>  
         </div>
       </div>
     </script>
@@ -52,45 +52,45 @@
     <script type="text/x-template" id="backlog-template">
       <kanban>
         <line title="backlog" style="width: 70%">
-          <column title="evolution" class="backlog-category" :model="kanban.backlog.evolution"></column>
-          <column title="bug" class="backlog-category" :model="kanban.backlog.bug"></column>
-          <column title="technical" class="backlog-category" :model="kanban.backlog.technical"></column>
+          <column title="evolution" class="backlog-category" id="backlog_evolution"></column>
+          <column title="bug" class="backlog-category" id="backlog_bug"></column>
+          <column title="technical" class="backlog-category" id="backlog_technical"></column>
         </line>
-        <column title="todo" style="width: 30%" :model="kanban.todo"></column>
+        <column title="todo" style="width: 30%" id="todo"></column>
       </kanban>  
     </script>
 
     <script type="text/x-template" id="development-template">
       <kanban>
-        <column title="todo" style="width: 15%" :model="kanban.todo"></column>
+        <column title="todo" style="width: 15%" id="todo"></column>
         <column title="dev" direction="vertical" style="width: 40%">
           <line title="back">
-            <column title="ongoing" :model="kanban.development.back.ongoing"></column>  
-            <column title="test" :model="kanban.development.back.test"></column>
+            <column title="ongoing" id="development_back_ongoing"></column>  
+            <column title="test" id="development_back_test"></column>
           </line>
           <line title="front">
-            <column title="ongoing" :model="kanban.development.front.ongoing"></column>  
-            <column title="test" :model="kanban.development.front.test"></column>
+            <column title="ongoing" id="development_front_ongoing"></column>  
+            <column title="test" id="development_front_test"></column>
           </line>
           <line title="cms">
-            <column title="ongoing" :model="kanban.development.cms.ongoing"></column>  
-            <column title="test" :model="kanban.development.cms.test"></column>
+            <column title="ongoing" id="development_cms_ongoing"></column>  
+            <column title="test" id="development_cms_test"></column>
           </line>
           <line title="other">
-            <column title="ongoing" :model="kanban.development.other.ongoing"></column>  
-            <column title="test" :model="kanban.development.other.test"></column>
+            <column title="ongoing" id="development_other_ongoing"></column>  
+            <column title="test" id="development_other_test"></column>
           </line>
         </column>
-        <column title="done" style="width: 40%" :model="kanban.development.done"></column>
+        <column title="done" style="width: 40%" id="development_done"></column>
       </kanban>
     </script>
 
     <script type="text/x-template" id="release-template">
       <kanban>
-        <column title="done" style="width: 40%" :model="kanban.development.done"></column>
-        <column title="qualification" style="width: 20%" :model="kanban.qualification"></column>
-        <column title="preproduction" style="width: 20%" :model="kanban.preproduction"></column>
-        <column title="production" style="width: 20%" :model="kanban.production"></column>
+        <column title="done" style="width: 40%" id="development_done"></column>
+        <column title="qualification" style="width: 20%" id="qualification"></column>
+        <column title="preproduction" style="width: 20%" id="preproduction"></column>
+        <column title="production" style="width: 20%" id="production"></column>
       </kanban>
     </script>
 
@@ -99,8 +99,8 @@
     <div id="app">
       <p>
         <a v-link="{ path: '/backlog' }">Backlog</a>
-        <!--a v-link="{ path: '/development' }">Development</a>
-        <a v-link="{ path: '/release' }">Release</a-->
+        <a v-link="{ path: '/development' }">Development</a>
+        <a v-link="{ path: '/release' }">Release</a>
       </p>
       <router-view></router-view>
     </div>  
