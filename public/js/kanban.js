@@ -13,7 +13,7 @@ var kanban = {
   },
   todo: 
   {
-    contents: [{type: 'task', title: 'My super task', id: 'tsk1'}, {type: 'task', title: 'My super task 2', id: 'tsk2'}]
+    contents: []
   },
   development_back_ongoing: 
   {
@@ -76,14 +76,12 @@ function findItems(kanban) {
   }
 } 
 
-findItems(kanban);
-
 var actions = {
   move: function(action) {
     var movedItem = items[action.id];
     var lastContainer = kanban[action.from.name].contents;
     var newContainer = kanban[action.to.name].contents;
-    lastContainer.$remove(movedItem);
+    lastContainer.splice(action.from.index, 1);
     newContainer.splice(action.to.index, 0, movedItem);
   }
 }
@@ -96,13 +94,15 @@ var emit = {
 
 var socket = io.connect('http://localhost:8080');
 socket.on('action', function (data) {
-  console.log(data);
-  //socket.emit('my other event', { my: 'data' });
   actions[data.type](data.action);
 });
-socket.on('data', function (kanban) {
-//  data.kanban = kanban;
-//  findItems(kanban);
+socket.on('data', function (data) {
+  for (var k in kanban) {
+    if (k in data) {
+      kanban[k] = data[k];
+    }
+  }
+  findItems(kanban);
 });
 
 var dragTemp = {};
