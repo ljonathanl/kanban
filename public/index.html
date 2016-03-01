@@ -12,7 +12,7 @@
   </head>
   <body>
     <script type="text/x-template" id="kanban-template">
-        <div class="k-list horizontal">
+        <div class="list horizontal">
           <slot/>
         </div>
     </script>
@@ -25,9 +25,9 @@
 
 
     <script type="text/x-template" id="column-template">
-      <div class="k-container">
+      <div class="column">
         <h2 v-if="title" class="column-title">{{title}}</h2>
-        <div class="k-list vertical">
+        <div class="list vertical">
           <slot/>
           <container :name="id" :contents="model.contents"/>  
         </div>
@@ -41,9 +41,9 @@
     </script>
 
     <script type="text/x-template" id="line-template">
-      <div class="k-line">
+      <div class="line">
         <h2 v-if="title" class="line-title">{{title}}</h2>
-        <div class="k-list horizontal">
+        <div class="list horizontal">
           <slot/>
         </div>
       </div>
