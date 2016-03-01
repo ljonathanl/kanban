@@ -61,4 +61,24 @@ var kanban = {
   }  
 };
 
-module.exports = exports = kanban;
+var items = {};
+
+function findItems(kanban) {
+  for (var k in kanban) {
+    var container = kanban[k];
+    var contents = container.contents;
+    if (contents) {
+      for (var i = 0; i < contents.length; i++) {
+        var item = contents[i];
+        items[item.id] = item;
+      }
+    }
+  }
+}
+
+findItems(kanban); 
+
+module.exports = exports = {
+  kanban: kanban,
+  items: items 
+}

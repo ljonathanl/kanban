@@ -1,4 +1,5 @@
-var kanban = require('./data');
+var data = require('./data');
+var actions = require('./actions');
 var express = require('express');
 var app = express();
 var server = require('http').Server(app);
@@ -14,9 +15,9 @@ app.get('/', function (req, res) {
 app.use(express.static('public'));
 
 io.on('connection', function (socket) {
-  socket.emit('data', kanban);
+  socket.emit('data', data.kanban);
   socket.on('action', function (data) {
-  	console.log('action', data.type);
+  	actions[data.type](data.action);
     socket.broadcast.emit('action', data);
   });
 });
