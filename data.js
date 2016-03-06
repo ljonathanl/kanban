@@ -1,80 +1,22 @@
 var kanban = {
-  backlog_evolution: 
-  {
-    contents: []
-  }, 
-  backlog_bug: 
-  {
-    contents: [{type: 'task', title: 'My super task', id: 'tsk1'}, {type: 'task', title: 'My super task 2', id: 'tsk2'}]
-  },
-  backlog_technical: 
-  {
-    contents: []
-  },
-  todo: 
-  {
-    contents: []
-  },
-  development_back_ongoing: 
-  {
-    contents: [{type: 'task', title: 'My super task', id: 'tsk3'}],
-  },
-  development_back_test: 
-  {
-    contents: []
-  },
-  development_front_ongoing: 
-  {
-    contents: []
-  },
-  development_front_test: 
-  {
-    contents: []
-  },
-  development_cms_ongoing: 
-  {
-    contents: []
-  },
-  development_cms_test: 
-  {
-    contents: [{type: 'task', title: 'My super task', id: 'tsk5'}]
-  },
-  development_other_ongoing: 
-  {
-    contents: []
-  },
-  development_other_test: 
-  {
-    contents: []
-  },
-  development_done: {
-    contents: [{type: 'task', title: 'My super task', id: 'tsk4'}]
-  },
-  qualification: {
-    contents: []
-  },
-  preproduction: {
-    contents: []
-  },
-  production: {
-    contents: []
-  }  
+  items: 
+  [
+    {type: 'task', title: 'My super task', id: 'tsk1', x: 20, y: 30}, 
+    {type: 'task', title: 'My super task 2', id: 'tsk2', x: 50, y: 30},
+    {type: 'task', title: 'My super task', id: 'tsk3', x: 80, y: 30},
+    {type: 'task', title: 'My super task', id: 'tsk5', x: 20, y: 50},
+    {type: 'task', title: 'My super task', id: 'tsk4', x: 10, y: 30},
+  ]  
 };
 
 var items = {};
 
 function findItems(kanban) {
-  for (var k in kanban) {
-    var container = kanban[k];
-    var contents = container.contents;
-    if (contents) {
-      for (var i = 0; i < contents.length; i++) {
-        var item = contents[i];
-        items[item.id] = item;
-      }
-    }
+  for (var i = 0; i < kanban.items.length; i++) {
+    var item = kanban.items[i];
+    items[item.id] = item;
   }
-}
+} 
 
 findItems(kanban); 
 
