@@ -61,9 +61,9 @@ function getDropIndex(event, vm) {
   return vm.contents.length;
 }
 
-function getDropPosition(event, vm) {
-  var x = Math.round(event.clientX / vm.$el.offsetWidth * 100);
-  var y = Math.round(event.clientY / vm.$el.offsetHeight * 100);  
+function getDropPosition(event, vm, offsetX, offsetY) {
+  var x = Math.round((event.clientX - offsetX) / vm.$el.offsetWidth * 100);
+  var y = Math.round((event.clientY - offsetY) / vm.$el.offsetHeight * 100);  
   return {x: x, y: y};
 }
 
@@ -78,11 +78,13 @@ Vue.component('kanban', {
     handleDragStart: function(event) {
       console.log("handleDragStart", event);
       dragTemp.item = event.target.dataset.id;
+      dragTemp.x = event.offsetX;
+      dragTemp.y = event.offsetY;
     },
     handleDrop: function(event) {
       console.log("handleDrop", event);
       var item = dragTemp.item;
-      var position = getDropPosition(event, this);
+      var position = getDropPosition(event, this, dragTemp.x, dragTemp.y);
       
       dragTemp = {};
       var action = {
