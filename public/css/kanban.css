@@ -55,11 +55,23 @@ html, body {
 }
 
 .task {
+	position: absolute;
+	max-width: 150px;
 	background-color: #999;
 	border: 1px solid #666;
 }
 
+.kanban {
+	position: relative;
+	height: 100%;
+	width: 100%;
+}
+
 .contents {
-	min-height: 200px;
-	padding-bottom: 30px;
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	background-color: #FF44EE;
+	top: 0;
+	left: 0;
 }

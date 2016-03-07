@@ -1,88 +1,24 @@
 var kanban = {
-  backlog_evolution: 
-  {
-    contents: []
-  }, 
-  backlog_bug: 
-  {
-    contents: []
-  },
-  backlog_technical: 
-  {
-    contents: []
-  },
-  todo: 
-  {
-    contents: []
-  },
-  development_back_ongoing: 
-  {
-    contents: [],
-  },
-  development_back_test: 
-  {
-    contents: []
-  },
-  development_front_ongoing: 
-  {
-    contents: []
-  },
-  development_front_test: 
-  {
-    contents: []
-  },
-  development_cms_ongoing: 
-  {
-    contents: []
-  },
-  development_cms_test: 
-  {
-    contents: []
-  },
-  development_other_ongoing: 
-  {
-    contents: []
-  },
-  development_other_test: 
-  {
-    contents: []
-  },
-  development_done: {
-    contents: []
-  },
-  qualification: {
-    contents: []
-  },
-  preproduction: {
-    contents: []
-  },
-  production: {
-    contents: []
-  }  
+  items: []  
 };
 
 var items = {};
 
 function findItems(kanban) {
-  for (var k in kanban) {
-    var container = kanban[k];
-    var contents = container.contents;
-    if (contents) {
-      for (var i = 0; i < contents.length; i++) {
-        var item = contents[i];
-        items[item.id] = item;
-      }
-    }
+  for (var i = 0; i < kanban.items.length; i++) {
+    var item = kanban.items[i];
+    items[item.id] = item;
   }
 } 
 
 var actions = {
   move: function(action) {
+    console.log(action);
     var movedItem = items[action.id];
-    var lastContainer = kanban[action.from.name].contents;
-    var newContainer = kanban[action.to.name].contents;
-    lastContainer.splice(action.from.index, 1);
-    newContainer.splice(action.to.index, 0, movedItem);
+    kanban.items.$remove(movedItem);
+    kanban.items.push(movedItem);
+    movedItem.x = action.to.x;
+    movedItem.y = action.to.y; 
   }
 }
 
@@ -125,10 +61,41 @@ function getDropIndex(event, vm) {
   return vm.contents.length;
 }
 
+function getDropPosition(event, vm, offsetX, offsetY) {
+  var x = Math.round((event.clientX - offsetX) / vm.$el.offsetWidth * 100);
+  var y = Math.round((event.clientY - offsetY) / vm.$el.offsetHeight * 100);  
+  return {x: x, y: y};
+}
+
 Vue.config.debug = true;
 
 Vue.component('kanban', {
-  template: '#kanban-template'
+  template: '#kanban-template',
+  data: function() {
+    return kanban;
+  },
+  methods: {
+    handleDragStart: function(event) {
+      console.log("handleDragStart", event);
+      dragTemp.item = event.target.dataset.id;
+      dragTemp.x = event.offsetX;
+      dragTemp.y = event.offsetY;
+    },
+    handleDrop: function(event) {
+      console.log("handleDrop", event);
+      var item = dragTemp.item;
+      var position = getDropPosition(event, this, dragTemp.x, dragTemp.y);
+      
+      dragTemp = {};
+      var action = {
+        id: item,
+        to: position  
+      };
+
+      emit.move(action);
+      actions.move(action);
+    }
+  },
 })
 
 Vue.component('task', {
@@ -163,71 +130,41 @@ Vue.component('column', {
   }
 })
 
-Vue.component('container', {
-  template: '#container-template',
-  props: {
-    name: String,
-    contents: Array
-  },
-  methods: {
-    handleDragStart: function(event) {
-      dragTemp.lastContainer = this.name;
-      dragTemp.item = event.target.dataset.id;
-      dragTemp.lastIndex = getContentIndexById(event.target.dataset.id, this.contents);
-    },
-    handleDrop: function(event) {
-      var lastContainer = dragTemp.lastContainer;
-      var lastIndex = dragTemp.lastIndex;
-      var item = dragTemp.item;
-      var index = getDropIndex(event, this);
+// Vue.component('container', {
+//   template: '#container-template',
+//   props: {
+//     name: String,
+//     contents: Array
+//   },
+//   methods: {
+//     handleDragStart: function(event) {
+//       console.log("handleDragStart", event);
+//       dragTemp.lastContainer = this.name;
+//       dragTemp.item = event.target.dataset.id;
+//       dragTemp.lastIndex = getContentIndexById(event.target.dataset.id, this.contents);
+//     },
+//     handleDrop: function(event) {
+//       console.log("handleDrop", event);
+//       var lastContainer = dragTemp.lastContainer;
+//       var lastIndex = dragTemp.lastIndex;
+//       var item = dragTemp.item;
+//       var index = getDropIndex(event, this);
       
-      dragTemp = {};
-      var action = {
-        id: item,
-        from: {name: lastContainer, index: lastIndex}, 
-        to: {name: this.name, index: index}  
-      };
+//       dragTemp = {};
+//       var action = {
+//         id: item,
+//         from: {name: lastContainer, index: lastIndex}, 
+//         to: {name: this.name, index: index}  
+//       };
 
-      emit.move(action);
-      actions.move(action);
-    }
-  },
+//       emit.move(action);
+//       actions.move(action);
+//     }
+//   },
+// })
+
+new Vue({
+  el: "body",
+  data: kanban,
 })
-
-var Backlog = Vue.component('backlog', {
-  template: '#backlog-template',
-})
-
-var Development = Vue.component('development', {
-  template: '#development-template',
-})
-
-var Release = Vue.component('release', {
-  template: '#release-template',
-})
-
-var App = Vue.extend({
-  data: function() {
-    return kanban;
-  }  
-});
-
-var router = new VueRouter();
-
-router.map({
-    '/': {
-        component: Development
-    },
-    '/backlog': {
-        component: Backlog
-    },
-    '/development': {
-        component: Development
-    },
-    '/release': {
-        component: Release
-    },
-});
-
-router.start(App, '#app');
 

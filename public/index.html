@@ -7,7 +7,6 @@
     <title>Kanban</title>
     <link href="css/kanban.css" rel="stylesheet">
     <script src="js/vue.js"></script>
-    <script src="js/vue-router.js"></script>
     <script src="/socket.io/socket.io.js"></script>
   </head>
   <body>
@@ -15,10 +14,15 @@
         <div class="list horizontal">
           <slot/>
         </div>
+        <div @dragstart="handleDragStart" @dragover.prevent class="contents" @drop.prevent="handleDrop" v-el:contents>
+          <component v-for="item in items" :is="item.type" :model="item"></component>
+        </div>
+      </div>  
     </script>
 
     <script type="text/x-template" id="task-template">
-      <div class="task" :data-id="model.id" draggable=true @dblclick="handleDoubleClick">
+      <div class="task" :data-id="model.id" draggable=true @dblclick="handleDoubleClick"
+        :style="{left: model.x + '%', top: model.y + '%'}">
         <h2>{{model.id}} - {{model.title}}</h2>
       </div>
     </script>
@@ -29,15 +33,8 @@
         <h2 v-if="title" class="column-title">{{title}}</h2>
         <div class="list vertical">
           <slot/>
-          <container :name="id" :contents="model.contents"/>  
-        </div>
+         </div>
       </div>
-    </script>
-
-    <script type="text/x-template" id="container-template">
-      <div @dragstart="handleDragStart" @dragover.prevent class="contents" @drop.prevent="handleDrop" v-el:contents>
-        <component v-if="contents" v-for="content in contents" :is="content.type" :model="content"></component>
-      </div>  
     </script>
 
     <script type="text/x-template" id="line-template">
@@ -49,61 +46,9 @@
       </div>
     </script>
 
-    <script type="text/x-template" id="backlog-template">
-      <kanban>
-        <line title="backlog" style="width: 70%">
-          <column title="evolution" class="backlog-category" id="backlog_evolution"></column>
-          <column title="bug" class="backlog-category" id="backlog_bug"></column>
-          <column title="technical" class="backlog-category" id="backlog_technical"></column>
-        </line>
-        <column title="todo" style="width: 30%" id="todo"></column>
-      </kanban>  
-    </script>
+    <kanban>
+    </kanban>
 
-    <script type="text/x-template" id="development-template">
-      <kanban>
-        <column title="todo" style="width: 15%" id="todo"></column>
-        <column title="dev" direction="vertical" style="width: 40%">
-          <line title="back">
-            <column title="ongoing" id="development_back_ongoing"></column>  
-            <column title="test" id="development_back_test"></column>
-          </line>
-          <line title="front">
-            <column title="ongoing" id="development_front_ongoing"></column>  
-            <column title="test" id="development_front_test"></column>
-          </line>
-          <line title="cms">
-            <column title="ongoing" id="development_cms_ongoing"></column>  
-            <column title="test" id="development_cms_test"></column>
-          </line>
-          <line title="other">
-            <column title="ongoing" id="development_other_ongoing"></column>  
-            <column title="test" id="development_other_test"></column>
-          </line>
-        </column>
-        <column title="done" style="width: 40%" id="development_done"></column>
-      </kanban>
-    </script>
-
-    <script type="text/x-template" id="release-template">
-      <kanban>
-        <column title="done" style="width: 40%" id="development_done"></column>
-        <column title="qualification" style="width: 20%" id="qualification"></column>
-        <column title="preproduction" style="width: 20%" id="preproduction"></column>
-        <column title="production" style="width: 20%" id="production"></column>
-      </kanban>
-    </script>
-
-
-
-    <div id="app">
-      <p>
-        <a v-link="{ path: '/backlog' }">Backlog</a>
-        <a v-link="{ path: '/development' }">Development</a>
-        <a v-link="{ path: '/release' }">Release</a>
-      </p>
-      <router-view></router-view>
-    </div>  
     <script src="js/kanban.js"></script>
   </body>
   
