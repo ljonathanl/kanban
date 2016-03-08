@@ -104,6 +104,11 @@ Vue.component('kanban', {
     handleDrop: function(event) {
       console.log("handleDrop", event);
       var item = dragTemp.item;
+      var offsetX = dragTemp.x;
+      var offsetY = dragTemp.y;
+      if (dragTemp.from != 'kanban') {
+        offsetX = offsetY = 0;
+      }
       var position = getDropPosition(event, this.$els.contents, dragTemp.x, dragTemp.y);
       var lastContainer = dragTemp.from;
       

@@ -12,7 +12,7 @@
   <body>
     <script type="text/x-template" id="kanban-template">
         <div @dragstart="handleDragStart" @dragover.prevent class="contents" @drop.prevent="handleDrop" v-el:contents>
-          <component v-for="item in items" :is="item.type" :model="item"></component>
+          <task v-for="item in items" :model="item"/>
         </div>
       </div>  
     </script>
@@ -24,7 +24,7 @@
         <div class="task-content">
           <h2>{{model.title}}</h2>
         </div>  
-        <div v-if="model.task" @dragstart.prevent="handleDragStart">
+        <div v-if="model.task" @dragstart.stop="handleDragStart">
           <task :model="model.task" class="innerTask"/>
         </div>
       </div>
