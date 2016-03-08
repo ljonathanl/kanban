@@ -15,16 +15,41 @@ var actions = {
   move: function(action) {
     console.log(action);
     var movedItem = items[action.id];
-    kanban.items.$remove(movedItem);
+    if (action.from == 'kanban') {
+      kanban.items.$remove(movedItem);
+    } else {
+      items[action.from].task = null;
+    }
     kanban.items.push(movedItem);
     movedItem.x = action.to.x;
     movedItem.y = action.to.y; 
-  }
+  },
+  add: function(action) {
+    console.log(action);
+    var movedItem = items[action.id];
+    var container = items[action.to];
+    if (action.from == 'kanban') {
+      kanban.items.$remove(movedItem);
+    } else {
+      items[action.from].task = null;
+    }
+    if (container.task) {
+      var lastTask = movedItem;
+      while (lastTask.task) {
+        lastTask = lastTask.task;
+      }
+      Vue.set(lastTask, 'task', container.task);
+    }
+    Vue.set(container, 'task', movedItem); 
+  },
 }
 
 var emit = {
   move: function(action) {
     socket.emit('action', { type: 'move', action: action });
+  },
+  add: function(action) {
+    socket.emit('action', { type: 'add', action: action });
   }
 }
 
@@ -41,7 +66,7 @@ socket.on('data', function (data) {
   findItems(kanban);
 });
 
-var dragTemp = {};
+var dragTemp = null;
 
 function getContentIndexById(id, contents) {
   for (var i = 0; i < contents.length; i++) {
@@ -50,20 +75,10 @@ function getContentIndexById(id, contents) {
   return -1;
 }
 
-function getDropIndex(event, vm) {
-  var element = event.target
-  while (element != vm.$els.contents) {
-    if (element.dataset.id != undefined) {
-      return getContentIndexById(element.dataset.id, vm.contents);
-    }
-    element = element.parentNode;
-  }
-  return vm.contents.length;
-}
 
-function getDropPosition(event, vm, offsetX, offsetY) {
-  var x = Math.round((event.clientX - offsetX) / vm.$el.offsetWidth * 100);
-  var y = Math.round((event.clientY - offsetY) / vm.$el.offsetHeight * 100);  
+function getDropPosition(event, container, offsetX, offsetY) {
+  var x = Math.round((event.clientX + offsetX) / container.offsetWidth * 100);
+  var y = Math.round((event.clientY + offsetY) / container.offsetHeight * 100);  
   return {x: x, y: y};
 }
 
@@ -77,19 +92,26 @@ Vue.component('kanban', {
   methods: {
     handleDragStart: function(event) {
       console.log("handleDragStart", event);
-      dragTemp.item = event.target.dataset.id;
-      dragTemp.x = event.offsetX;
-      dragTemp.y = event.offsetY;
+      if (!dragTemp) {
+        dragTemp = {};
+        dragTemp.item = event.target.dataset.id;
+        dragTemp.from = "kanban";
+        var style = window.getComputedStyle(event.target, null);
+        dragTemp.x = parseInt(style.getPropertyValue("left"),10) - event.clientX;
+        dragTemp.y = parseInt(style.getPropertyValue("top"),10) - event.clientY;
+      }
     },
     handleDrop: function(event) {
       console.log("handleDrop", event);
       var item = dragTemp.item;
-      var position = getDropPosition(event, this, dragTemp.x, dragTemp.y);
+      var position = getDropPosition(event, this.$els.contents, dragTemp.x, dragTemp.y);
+      var lastContainer = dragTemp.from;
       
-      dragTemp = {};
+      dragTemp = null;
       var action = {
         id: item,
-        to: position  
+        to: position,
+        from: lastContainer   
       };
 
       emit.move(action);
@@ -106,62 +128,33 @@ Vue.component('task', {
   methods: {
     handleDoubleClick: function(event) {
       console.log("double click");
-    }
-  }
-})
-
-Vue.component('line', {
-  template: '#line-template',
-  props: {
-    title: String
-  },
-})
-
-Vue.component('column', {
-  template: '#column-template',
-  props: {
-    id: String,
-    title: String
-  },
-  computed: {
-    model: function() {
-      return kanban[this.id];
-    }
-  }
-})
-
-// Vue.component('container', {
-//   template: '#container-template',
-//   props: {
-//     name: String,
-//     contents: Array
-//   },
-//   methods: {
-//     handleDragStart: function(event) {
-//       console.log("handleDragStart", event);
-//       dragTemp.lastContainer = this.name;
-//       dragTemp.item = event.target.dataset.id;
-//       dragTemp.lastIndex = getContentIndexById(event.target.dataset.id, this.contents);
-//     },
-//     handleDrop: function(event) {
-//       console.log("handleDrop", event);
-//       var lastContainer = dragTemp.lastContainer;
-//       var lastIndex = dragTemp.lastIndex;
-//       var item = dragTemp.item;
-//       var index = getDropIndex(event, this);
+    },
+    handleDragStart: function(event) {
+      console.log("handleDragStart", event);
+      dragTemp = {};
+      dragTemp.item = this.model.task.id;
+      dragTemp.from = this.model.id;
+      var style = window.getComputedStyle(event.target, null);
+      dragTemp.x = parseInt(style.getPropertyValue("left"),10) - event.clientX;
+      dragTemp.y = parseInt(style.getPropertyValue("top"),10) - event.clientY;
+    },
+    handleDrop: function(event) {
+      console.log("handleDrop", event);
+      var item = dragTemp.item;
+      var lastContainer = dragTemp.from;
       
-//       dragTemp = {};
-//       var action = {
-//         id: item,
-//         from: {name: lastContainer, index: lastIndex}, 
-//         to: {name: this.name, index: index}  
-//       };
+      dragTemp = null;
+      var action = {
+        id: item,
+        to: this.model.id,
+        from: lastContainer  
+      };
 
-//       emit.move(action);
-//       actions.move(action);
-//     }
-//   },
-// })
+      emit.add(action);
+      actions.add(action);
+    }
+  }
+})
 
 new Vue({
   el: "body",

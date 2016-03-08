@@ -11,9 +11,6 @@
   </head>
   <body>
     <script type="text/x-template" id="kanban-template">
-        <div class="list horizontal">
-          <slot/>
-        </div>
         <div @dragstart="handleDragStart" @dragover.prevent class="contents" @drop.prevent="handleDrop" v-el:contents>
           <component v-for="item in items" :is="item.type" :model="item"></component>
         </div>
@@ -22,32 +19,18 @@
 
     <script type="text/x-template" id="task-template">
       <div class="task" :data-id="model.id" draggable=true @dblclick="handleDoubleClick"
+        @dragover.prevent @drop.stop.prevent="handleDrop"
         :style="{left: model.x + '%', top: model.y + '%'}">
-        <h2>{{model.id}} - {{model.title}}</h2>
-      </div>
-    </script>
-
-
-    <script type="text/x-template" id="column-template">
-      <div class="column">
-        <h2 v-if="title" class="column-title">{{title}}</h2>
-        <div class="list vertical">
-          <slot/>
-         </div>
-      </div>
-    </script>
-
-    <script type="text/x-template" id="line-template">
-      <div class="line">
-        <h2 v-if="title" class="line-title">{{title}}</h2>
-        <div class="list horizontal">
-          <slot/>
+        <div class="task-content">
+          <h2>{{model.title}}</h2>
+        </div>  
+        <div v-if="model.task" @dragstart.prevent="handleDragStart">
+          <task :model="model.task" class="innerTask"/>
         </div>
       </div>
     </script>
 
-    <kanban>
-    </kanban>
+    <kanban/>
 
     <script src="js/kanban.js"></script>
   </body>
