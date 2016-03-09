@@ -72,17 +72,9 @@ socket.on('data', function (data) {
 
 var dragTemp = null;
 
-function getContentIndexById(id, contents) {
-  for (var i = 0; i < contents.length; i++) {
-    if (contents[i].id == id) return i;
-  }
-  return -1;
-}
-
-
 function getDropPosition(event, container, offsetX, offsetY) {
-  var x = Math.round((event.clientX + offsetX) / container.offsetWidth * 100);
-  var y = Math.round((event.clientY + offsetY) / container.offsetHeight * 100);  
+  var x = Math.round((event.clientX - offsetX) / container.offsetWidth * 100);
+  var y = Math.round((event.clientY - offsetY) / container.offsetHeight * 100);  
   return {x: x, y: y};
 }
 
@@ -103,11 +95,8 @@ Vue.component('kanban', {
       dragTemp = {};
       dragTemp.item = event.target.dataset.id;
       dragTemp.from = "kanban";
-      // var style = window.getComputedStyle(event.target, null);
-      // dragTemp.x = parseInt(style.getPropertyValue("left"),10) - event.clientX;
-      // dragTemp.y = parseInt(style.getPropertyValue("top"),10) - event.clientY;
-      dragTemp.x = -event.offsetX;
-      dragTemp.y = -event.offsetY;
+      dragTemp.x = event.offsetX;
+      dragTemp.y = event.offsetY;
       console.log(dragTemp);
     },
     handleDrop: function(event) {
@@ -158,8 +147,8 @@ Vue.component('task', {
       dragTemp = {};
       dragTemp.item = this.model.task.id;
       dragTemp.from = this.model.id;
-      dragTemp.x = -event.offsetX;
-      dragTemp.y = -event.offsetY;
+      dragTemp.x = event.offsetX;
+      dragTemp.y = event.offsetY;
       console.log(dragTemp);
     },
     handleDrop: function(event) {

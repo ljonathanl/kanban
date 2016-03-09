@@ -17,7 +17,8 @@ app.use(express.static('public'));
 io.on('connection', function (socket) {
   socket.emit('data', data.kanban);
   socket.on('action', function (data) {
-  	//actions[data.type](data.action);
+  	console.log("action: ", data.type);
+  	actions[data.type](data.action);
     socket.broadcast.emit('action', data);
   });
 });
