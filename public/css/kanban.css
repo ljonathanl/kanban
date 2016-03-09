@@ -16,6 +16,7 @@ html, body {
 
 .innerTask {
 	position: initial;
+	margin-top: -5px;
 }
 
 .task h2 {
@@ -35,4 +36,9 @@ html, body {
 	width: 100%;
 	top: 0;
 	left: 0;
+	border: 1px solid #666;
+}
+
+.selected {
+	border: 1px solid #F00;
 }

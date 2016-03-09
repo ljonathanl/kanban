@@ -8,6 +8,10 @@ function findItems(kanban) {
   for (var i = 0; i < kanban.items.length; i++) {
     var item = kanban.items[i];
     items[item.id] = item;
+    while(item.task) {
+      item = item.task;
+      items[item.id] = item;
+    }
   }
 } 
 
@@ -89,17 +93,22 @@ Vue.component('kanban', {
   data: function() {
     return kanban;
   },
+  props: {
+    selected: Boolean
+  },
   methods: {
     handleDragStart: function(event) {
       console.log("handleDragStart", event);
-      if (!dragTemp) {
-        dragTemp = {};
-        dragTemp.item = event.target.dataset.id;
-        dragTemp.from = "kanban";
-        var style = window.getComputedStyle(event.target, null);
-        dragTemp.x = parseInt(style.getPropertyValue("left"),10) - event.clientX;
-        dragTemp.y = parseInt(style.getPropertyValue("top"),10) - event.clientY;
-      }
+      if (dragTemp) return;
+      dragTemp = {};
+      dragTemp.item = event.target.dataset.id;
+      dragTemp.from = "kanban";
+      // var style = window.getComputedStyle(event.target, null);
+      // dragTemp.x = parseInt(style.getPropertyValue("left"),10) - event.clientX;
+      // dragTemp.y = parseInt(style.getPropertyValue("top"),10) - event.clientY;
+      dragTemp.x = -event.offsetX;
+      dragTemp.y = -event.offsetY;
+      console.log(dragTemp);
     },
     handleDrop: function(event) {
       console.log("handleDrop", event);
@@ -119,8 +128,15 @@ Vue.component('kanban', {
         from: lastContainer   
       };
 
+      this.selected = false;
       emit.move(action);
       actions.move(action);
+    },
+    handleDragOver: function(event) {
+      this.selected = true;
+    },
+    handleDragLeave: function(event) {
+      this.selected = false;
     }
   },
 })
@@ -128,7 +144,9 @@ Vue.component('kanban', {
 Vue.component('task', {
   template: '#task-template',
   props: {
-    model: Object
+    model: Object,
+    selected: Boolean,
+    dragged: Boolean
   },
   methods: {
     handleDoubleClick: function(event) {
@@ -136,12 +154,13 @@ Vue.component('task', {
     },
     handleDragStart: function(event) {
       console.log("handleDragStart", event);
+      this.dragged = true;
       dragTemp = {};
       dragTemp.item = this.model.task.id;
       dragTemp.from = this.model.id;
-      var style = window.getComputedStyle(event.target, null);
-      dragTemp.x = parseInt(style.getPropertyValue("left"),10) - event.clientX;
-      dragTemp.y = parseInt(style.getPropertyValue("top"),10) - event.clientY;
+      dragTemp.x = -event.offsetX;
+      dragTemp.y = -event.offsetY;
+      console.log(dragTemp);
     },
     handleDrop: function(event) {
       console.log("handleDrop", event);
@@ -155,8 +174,23 @@ Vue.component('task', {
         from: lastContainer  
       };
 
+      this.selected = false;
       emit.add(action);
       actions.add(action);
+    },
+    handleDragOver: function(event) {
+      if (this.dragged) return false;
+      this.selected = true;
+    },
+    handleDragLeave: function(event) {
+      this.selected = false;
+    },
+    handleDrag: function(event) {
+      this.dragged = true;
+    },
+    handleDragEnd: function(event) {
+      console.log("handleDragEnd", event);
+      this.dragged = false;
     }
   }
 })

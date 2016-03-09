@@ -11,7 +11,8 @@
   </head>
   <body>
     <script type="text/x-template" id="kanban-template">
-        <div @dragstart="handleDragStart" @dragover.prevent class="contents" @drop.prevent="handleDrop" v-el:contents>
+        <div @dragstart="handleDragStart" @dragover.prevent="handleDragOver" class="contents" @drop.prevent="handleDrop" v-el:contents @dragleave="handleDragLeave"
+          :class="{selected: selected}">
           <task v-for="item in items" :model="item"/>
         </div>
       </div>  
@@ -19,9 +20,10 @@
 
     <script type="text/x-template" id="task-template">
       <div class="task" :data-id="model.id" draggable=true @dblclick="handleDoubleClick"
-        @dragover.prevent @drop.stop.prevent="handleDrop"
+        @dragover.prevent.stop="handleDragOver" @drop.stop.prevent="handleDrop" @dragleave.stop="handleDragLeave"
+        @drag.stop="handleDrag" @dragend.stop="handleDragEnd"
         :style="{left: model.x + '%', top: model.y + '%'}">
-        <div class="task-content">
+        <div class="task-content" :class="{selected: selected}">
           <h2>{{model.title}}</h2>
         </div>  
         <div v-if="model.task" @dragstart.stop="handleDragStart">
