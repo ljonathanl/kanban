@@ -73,8 +73,8 @@ socket.on('data', function (data) {
 var dragTemp = null;
 
 function getDropPosition(event, container, offsetX, offsetY) {
-  var x = Math.round((event.clientX - offsetX) / container.offsetWidth * 100);
-  var y = Math.round((event.clientY - offsetY) / container.offsetHeight * 100);  
+  var x = event.clientX - offsetX;
+  var y = event.clientY - offsetY;  
   return {x: x, y: y};
 }
 
@@ -143,7 +143,6 @@ Vue.component('task', {
     },
     handleDragStart: function(event) {
       console.log("handleDragStart", event);
-      this.dragged = true;
       dragTemp = {};
       dragTemp.item = this.model.task.id;
       dragTemp.from = this.model.id;
@@ -152,7 +151,13 @@ Vue.component('task', {
       console.log(dragTemp);
     },
     handleDrop: function(event) {
+      var task = items[dragTemp.item];
+      while (task) {
+        if (task.id == this.model.id) return false;
+        task = task.task;
+      }
       console.log("handleDrop", event);
+      event.stopPropagation();
       var item = dragTemp.item;
       var lastContainer = dragTemp.from;
       
@@ -161,20 +166,27 @@ Vue.component('task', {
         id: item,
         to: this.model.id,
         from: lastContainer  
-      };
+      }
 
       this.selected = false;
       emit.add(action);
       actions.add(action);
     },
     handleDragOver: function(event) {
-      if (this.dragged) return false;
+      var task = items[dragTemp.item];
+      while (task) {
+        console.log("subtask: ", task.id)
+        if (task.id == this.model.id) return false;
+        task = task.task;
+      }
+      event.stopPropagation();
       this.selected = true;
     },
     handleDragLeave: function(event) {
       this.selected = false;
     },
     handleDrag: function(event) {
+      console.log("handleDrag", event);
       this.dragged = true;
     },
     handleDragEnd: function(event) {
@@ -182,6 +194,13 @@ Vue.component('task', {
       this.dragged = false;
     }
   }
+})
+
+Vue.component('zone', {
+  template: '#zone-template',
+  props: {
+    title: String
+  }  
 })
 
 new Vue({

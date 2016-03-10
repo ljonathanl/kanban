@@ -11,6 +11,8 @@
   </head>
   <body>
     <script type="text/x-template" id="kanban-template">
+      <div class="kanban">
+        <slot></slot>
         <div @dragstart="handleDragStart" @dragover.prevent="handleDragOver" class="contents" @drop.prevent="handleDrop" v-el:contents @dragleave="handleDragLeave"
           :class="{selected: selected}">
           <task v-for="item in items" :model="item"/>
@@ -20,11 +22,11 @@
 
     <script type="text/x-template" id="task-template">
       <div class="task" :data-id="model.id" draggable=true @dblclick="handleDoubleClick"
-        @dragover.prevent.stop="handleDragOver" @drop.stop.prevent="handleDrop" @dragleave.stop="handleDragLeave"
-        @drag.stop="handleDrag" @dragend.stop="handleDragEnd"
-        :style="{left: model.x + '%', top: model.y + '%'}">
-        <div class="task-content" :class="{selected: selected}">
-          <h2>{{model.title}}</h2>
+        @dragover.prevent="handleDragOver" @drop.prevent="handleDrop" @dragleave.stop="handleDragLeave"
+        @dragend.stop="handleDragEnd" @dragstart="handleDrag"
+        :style="{left: model.x + 'px', top: model.y + 'px'}">
+        <div class="task-content" :class="{selected: selected, dragged: dragged}">
+          <h3>{{model.title}}</h3>
         </div>  
         <div v-if="model.task" @dragstart.stop="handleDragStart">
           <task :model="model.task" class="innerTask"/>
@@ -32,7 +34,23 @@
       </div>
     </script>
 
-    <kanban/>
+    <script type="text/x-template" id="zone-template">
+      <div class="zone" :id="title">
+        <h2>{{title}}</h2>
+      </div>
+    </script>
+
+    <kanban>
+      <zone title="backlog"></zone>
+      <zone title="bug"></zone>
+      <zone title="technical"></zone>
+      <zone title="todo"></zone>
+      <zone title="development"></zone>
+      <zone title="done"></zone>
+      <zone title="qualification"></zone>
+      <zone title="preproduction"></zone>
+      <zone title="production"></zone>
+    </kanban>
 
     <script src="js/kanban.js"></script>
   </body>

@@ -1,6 +1,7 @@
 html, body {
 	height: 100%;
 	font-family: Arial, Verdana;
+	margin: 0;
 }
 
 
@@ -9,25 +10,24 @@ html, body {
 }
 
 .task-content {
-	width: 200px;
+	width: 150px;
 	background-color: #999;
 	border: 1px solid #666;
 }
 
 .innerTask {
 	position: initial;
-	margin-top: -5px;
 }
 
-.task h2 {
+.task h3 {
 	font-size: 14px;
 	margin: 10px;
 }
 
 .kanban {
 	position: relative;
-	height: 100%;
-	width: 100%;
+	width: 3000px;
+	min-height: 1000px;
 }
 
 .contents {
@@ -40,5 +40,81 @@ html, body {
 }
 
 .selected {
-	border: 1px solid #F00;
+	outline: 1px solid #F00;
+}
+
+.dragged {
+	background-color: #0F0;
+}
+
+.zone {
+	position: absolute;
+}
+
+.zone h2 {
+	font-size: 16px;
+	margin: ;
+	text-align: center;
+}
+
+#backlog {
+	left: 0px;
+	border-right: solid 2px #444;
+	width: 600px;
+	height: 90%;
+}
+
+#bug {
+	width: 200px;
+	height: 90%;
+	left: 600px;
+	border-right: solid 3px #444;
+}
+
+#technical {
+	width: 200px;
+	height: 90%;
+	left: 800px;
+	border-right: solid 2px #444;
+}
+
+#todo {
+	width: 400px;
+	height: 90%;
+	left: 1000px;
+	border-right: solid 3px #444;
+}
+
+#development {
+	width: 600px;
+	height: 90%;
+	left: 1400px;
+	border-right: solid 2px #444;
+}
+
+#done {
+	width: 400px;
+	height: 90%;
+	left: 2000px;
+	border-right: solid 3px #444;
+}
+
+#qualification {
+	width: 200px;
+	height: 90%;
+	left: 2400px;
+	border-right: solid 2px #444;
+}
+
+#preproduction {
+	width: 200px;
+	height: 90%;
+	left: 2600px;
+	border-right: solid 2px #444;
+}
+
+#production {
+	width: 200px;
+	height: 90%;
+	left: 2800px;
 }
