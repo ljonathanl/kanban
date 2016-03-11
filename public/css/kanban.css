@@ -13,6 +13,7 @@ html, body {
 	width: 150px;
 	background-color: #999;
 	border: 1px solid #666;
+	user-select: none;
 }
 
 .innerTask {
@@ -55,66 +56,109 @@ html, body {
 	font-size: 16px;
 	margin: ;
 	text-align: center;
+	text-transform: uppercase;
 }
 
 #backlog {
 	left: 0px;
-	border-right: solid 2px #444;
+	border-right: dashed 1px #444;
 	width: 600px;
-	height: 90%;
+	height: 100%;
 }
 
 #bug {
 	width: 200px;
-	height: 90%;
+	height: 100%;
 	left: 600px;
-	border-right: solid 3px #444;
+	border-right: dashed 1px #444;
 }
 
 #technical {
 	width: 200px;
-	height: 90%;
+	height: 100%;
 	left: 800px;
-	border-right: solid 2px #444;
+	border-right: solid 3px #444;
 }
 
 #todo {
 	width: 400px;
-	height: 90%;
+	height: 100%;
 	left: 1000px;
-	border-right: solid 3px #444;
+	border-right: solid 2px #444;
 }
 
 #development {
 	width: 600px;
-	height: 90%;
+	height: 100%;
 	left: 1400px;
 	border-right: solid 2px #444;
 }
 
 #done {
 	width: 400px;
-	height: 90%;
+	height: 100%;
 	left: 2000px;
 	border-right: solid 3px #444;
 }
 
 #qualification {
 	width: 200px;
-	height: 90%;
+	height: 100%;
 	left: 2400px;
-	border-right: solid 2px #444;
+	border-right: solid 1px #444;
 }
 
 #preproduction {
 	width: 200px;
-	height: 90%;
+	height: 100%;
 	left: 2600px;
-	border-right: solid 2px #444;
+	border-right: solid 1px #444;
 }
 
 #production {
 	width: 200px;
-	height: 90%;
+	height: 100%;
 	left: 2800px;
+}
+
+.line {
+  	display: flex; /* contexte sur le parent */
+	flex-direction: column; /* direction d'affichage verticale */
+	justify-content: center;
+}
+
+.line h2 {
+	width: 5px;
+    word-wrap: break-word;
+    margin: 5px;
+}
+
+#back {
+	width: 1000px;
+	height: 350px;
+	left: 1000px;
+	border-bottom: solid 1px #444;
+}
+
+#front {
+	top: 350px;
+	width: 1000px;
+	height: 250px;
+	left: 1000px;
+	border-bottom: solid 1px #444;
+}
+
+#cms {
+	top: 600px;
+	width: 1000px;
+	height: 200px;
+	left: 1000px;
+	border-bottom: solid 1px #444;
+}
+
+#other {
+	top: 800px;
+	width: 1000px;
+	height: 200px;
+	left: 1000px;
 }

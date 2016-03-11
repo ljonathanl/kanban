@@ -73,8 +73,8 @@ socket.on('data', function (data) {
 var dragTemp = null;
 
 function getDropPosition(event, container, offsetX, offsetY) {
-  var x = event.clientX - offsetX;
-  var y = event.clientY - offsetY;  
+  var x = event.clientX - offsetX + window.scrollX;
+  var y = event.clientY - offsetY  + window.scrollY;  
   return {x: x, y: y};
 }
 
