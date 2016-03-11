@@ -101,7 +101,7 @@ socket.on('action', function (data) {
   actions[data.type](data.action);
 });
 socket.on('create', function (data) {
-  items[data.id] = data;
+  Vue.set(items, data.id, data);
 });
 socket.on('show', function (data) {
   showTask(data);

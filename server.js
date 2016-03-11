@@ -19,9 +19,9 @@ io.on('connection', function (socket) {
   socket.on('action', function (actionData) {
   	console.log("action: ", actionData.type);
   	if (actionData.action.id == "new") {
-  		var id = Math.floor(new Date().getTime() / 1000);
+  		var id = "tsk-" + Math.floor(new Date().getTime() / 1000);
   		actionData.action.id = id;
-  		var newTask = {title: "New task", id: id};
+  		var newTask = {title: "New task", id: id, x: 0, y: 0};
   		data.items[id] = newTask;
   		socket.broadcast.emit('create', newTask);
   		io.sockets.emit('create', newTask);
