@@ -23,6 +23,7 @@ html, body {
 .new-task h3, .task h3 {
 	font-size: 14px;
 	margin: 10px;
+	text-align: center;
 }
 
 .kanban {
@@ -209,4 +210,36 @@ html, body {
 	z-index: 50;
 	background-color: #BBB;
 	padding: 5px;
+}
+
+.back {
+	background-color: #3498db;
+}
+
+.front {
+	background-color: #2ecc71;
+}
+
+.cms {
+	background-color: #C5EFF7;
+}
+
+.other {
+	background-color: #95a5a6;
+}
+
+.bug {
+	background-color: #D2527F;
+}
+
+.release {
+	background-color: #f39c12;
+}
+
+.db {
+	background-color: #BE90D4;
+}
+
+.impediment {
+	background-color: #EC644B;
 }

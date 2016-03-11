@@ -1,7 +1,8 @@
 var kanban = {
   items: [],
   currentTask: null,
-  ready: false  
+  ready: false,
+  categories: ["back", "front", "cms", "db", "impediment", "bug", "release", "other"]  
 };
 
 var items = {};
@@ -78,8 +79,13 @@ var actions = {
   update: function(action) {
     console.log(action);
     var updatedItem = items[action.id];
-    Vue.set(updatedItem, action.property, action.value);   
-  }
+    for (var k in action.properties) {
+      Vue.set(updatedItem, k, action.properties[k]);   
+    }
+  },
+  create: function(action) {
+    Vue.set(items, action.id, action);
+  },
 }
 
 var emit = {
@@ -99,9 +105,6 @@ var waiting = [];
 var socket = io.connect('http://localhost:8080');
 socket.on('action', function (data) {
   actions[data.type](data.action);
-});
-socket.on('create', function (data) {
-  Vue.set(items, data.id, data);
 });
 socket.on('show', function (data) {
   showTask(data);
@@ -205,7 +208,12 @@ Vue.component('task', {
   props: {
     model: Object,
     selected: Boolean,
-    dragged: Boolean
+    dragged: Boolean,
+  },
+  computed: {
+    background: function() {
+      return this.model.category + (this.selected ? " selected" : "") + (this.dragged ? " dragged" : ""); 
+    },
   },
   methods: {
     handleDragStart: function(event) {
@@ -296,16 +304,27 @@ Vue.component('menu', {
 Vue.component('edit-task', {
   template: '#edit-task-template',
   props: {
-    task: null
+    task: null,
+    categories: Array,
   }, 
   methods: {
     edit: function() {
-      var action = {
-        id: this.task.id,
-        property: 'title',
-        value: this.task.title  
+      var originalTask = items[this.task.id];
+      var properties = {};
+      var hasChanged = false;
+      for (var k in originalTask) {
+        if (originalTask[k] != this.task[k]) {
+          properties[k] = this.task[k];
+          hasChanged = true;
+        }
       }
-      emit.update(action);
+      if (hasChanged) {
+        var action = {
+          id: this.task.id,
+          properties: properties  
+        }
+        emit.update(action);
+      }
       showTask(null);
     },
     cancel: function() {
