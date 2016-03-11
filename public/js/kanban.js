@@ -57,6 +57,7 @@ var actions = {
     kanban.items.push(movedItem);
     movedItem.x = action.to.x;
     movedItem.y = action.to.y; 
+    Vue.set(movedItem, 'parent', null);
   },
   add: function(action) {
     console.log(action);
@@ -75,6 +76,7 @@ var actions = {
       Vue.set(lastTask, 'task', container.task);
     }
     Vue.set(container, 'task', movedItem); 
+    Vue.set(movedItem, 'parent', container.id);
   },
   update: function(action) {
     console.log(action);

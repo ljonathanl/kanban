@@ -7,7 +7,7 @@ var kanban = {
     {title: 'Update homepage carousel with Wordpress API evolutions', id: 'tsk5', x: 433, y: 80, category: "front"},
     {
       title: 'Partially show Client ID in Application details', id: 'tsk4', x: 214, y: 197, category: "back",
-      task: {title: 'Partially show Client ID in Application details front', id: 'tsk6', x: 10, y: 30}
+      task: {title: 'Partially show Client ID in Application details front', id: 'tsk6', x: 10, y: 30, parent: 'tsk4'}
     },
   ]  
 };

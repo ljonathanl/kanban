@@ -27,7 +27,7 @@
         :style="{left: model.x + 'px', top: model.y + 'px'}">
         <div class="task-content" :class="background">
           <h3>{{model.title}}</h3>
-        </div>  
+        </div>
         <div v-if="model.task" @dragstart.stop="handleDragStart">
           <task :model="model.task" class="innerTask"/>
         </div>

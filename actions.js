@@ -21,6 +21,7 @@ var actions = {
     kanban.items.push(movedItem);
     movedItem.x = action.to.x;
     movedItem.y = action.to.y; 
+    movedItem.parent = null;
   },
   add: function(action) {
     console.log(action);
@@ -39,6 +40,7 @@ var actions = {
       lastTask.task = container.task;
     }
     container.task = movedItem;
+    movedItem.parent = container.id;
   },
   update: function(action) {
     console.log(action);
