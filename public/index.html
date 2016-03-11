@@ -21,7 +21,7 @@
     </script>
 
     <script type="text/x-template" id="task-template">
-      <div class="task" :data-id="model.id" draggable=true @dblclick="handleDoubleClick"
+      <div class="task" :data-id="model.id" draggable=true @dblclick.stop="edit"
         @dragover.prevent="handleDragOver" @drop.prevent="handleDrop" @dragleave.stop="handleDragLeave"
         @dragend.stop="handleDragEnd" @dragstart="handleDrag"
         :style="{left: model.x + 'px', top: model.y + 'px'}">
@@ -32,6 +32,20 @@
           <task :model="model.task" class="innerTask"/>
         </div>
       </div>
+    </script>
+
+    <script type="text/x-template" id="edit-task-template">
+      <template v-if="task != null">
+      <div class="popup-background" @click="cancel"></div>
+        <div class="edit-task" @click.stop>
+          <label>Id: <input type="text" v-model="task.id" disabled></label>
+          <label>Title: <textarea v-model="task.title"></textarea></label> 
+          <p>
+            <button type="button" @click="edit">Save</button>
+            <button type="button" @click="cancel">Cancel</button>
+          </p>
+        </div>
+      </template>  
     </script>
 
     <script type="text/x-template" id="zone-template">
@@ -55,6 +69,8 @@
       <zone title="cms" class="line"></zone>
       <zone title="other" class="line"></zone>
     </kanban>
+
+    <edit-task :task="currentTask"></edit-task>
 
     <script src="js/kanban.js"></script>
   </body>

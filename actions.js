@@ -39,6 +39,11 @@ var actions = {
       lastTask.task = container.task;
     }
     container.task = movedItem;
+  },
+  update: function(action) {
+    console.log(action);
+    var updatedItem = items[action.id];
+    updatedItem[action.property] = action.value;   
   }  
 }
 

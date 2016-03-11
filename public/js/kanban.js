@@ -1,5 +1,6 @@
 var kanban = {
-  items: []  
+  items: [],
+  currentTask: null  
 };
 
 var items = {};
@@ -16,6 +17,10 @@ function findItems(kanban) {
 } 
 
 var zones = [];
+
+function clone(object) {
+  return JSON.parse(JSON.stringify(object));
+}
 
 function addZone(id, rectangle) {
   zones.push({id: id, rectangle: rectangle});
@@ -69,6 +74,11 @@ var actions = {
     }
     Vue.set(container, 'task', movedItem); 
   },
+  update: function(action) {
+    console.log(action);
+    var updatedItem = items[action.id];
+    Vue.set(updatedItem, action.property, action.value);   
+  }
 }
 
 var emit = {
@@ -77,6 +87,9 @@ var emit = {
   },
   add: function(action) {
     socket.emit('action', { type: 'add', action: action });
+  },
+  update: function(action) {
+    socket.emit('action', { type: 'update', action: action });
   }
 }
 
@@ -164,9 +177,6 @@ Vue.component('task', {
     dragged: Boolean
   },
   methods: {
-    handleDoubleClick: function(event) {
-      console.log("double click");
-    },
     handleDragStart: function(event) {
       console.log("handleDragStart", event);
       // for firefox
@@ -219,6 +229,9 @@ Vue.component('task', {
     handleDragEnd: function(event) {
       console.log("handleDragEnd", event);
       this.dragged = false;
+    },
+    edit: function() {
+      kanban.currentTask = clone(this.model);
     }
   }
 })
@@ -231,6 +244,28 @@ Vue.component('zone', {
   attached: function() {
     addZone(this.title, this.$el.getBoundingClientRect());
   }  
+})
+
+Vue.component('edit-task', {
+  template: '#edit-task-template',
+  props: {
+    task: null
+  }, 
+  methods: {
+    edit: function() {
+      var action = {
+        id: this.task.id,
+        property: 'title',
+        value: this.task.title  
+      }
+      emit.update(action);
+      actions.update(action);
+      kanban.currentTask = null;
+    },
+    cancel: function() {
+      kanban.currentTask = null;
+    }
+  }
 })
 
 new Vue({

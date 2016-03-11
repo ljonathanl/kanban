@@ -162,3 +162,27 @@ html, body {
 	height: 200px;
 	left: 1000px;
 }
+
+.edit-task {
+    border: solid 1px black;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    background-color: white;
+    z-index: 100;
+    height: 400px;
+    margin-top: -200px;
+    width: 600px;
+    margin-left: -300px;
+}
+
+.popup-background {
+	top: 0;
+	left: 0;
+	position: absolute;
+	width: 3000px;
+	height: 100%;
+	background-color: #333333;
+	z-index: 99;
+	opacity: 0.5;
+}
