@@ -1,6 +1,7 @@
 var kanban = {
   items: [],
-  currentTask: null  
+  currentTask: null,
+  ready: false  
 };
 
 var items = {};
@@ -93,6 +94,8 @@ var emit = {
   }
 }
 
+var waiting = [];
+
 var socket = io.connect('http://localhost:8080');
 socket.on('action', function (data) {
   actions[data.type](data.action);
@@ -104,14 +107,37 @@ socket.on('data', function (data) {
     }
   }
   findItems(kanban);
+  kanban.ready = true;
+  for (var i = 0; i < waiting.length; i++) {
+    waiting[i]();
+  }
 });
 
 var dragTemp = null;
+
 
 function getDropPosition(event, container, offsetX, offsetY) {
   var x = event.clientX - offsetX + window.scrollX;
   var y = event.clientY - offsetY  + window.scrollY;  
   return {x: x, y: y};
+}
+
+function showTask(id) {
+  if (!kanban.ready) {
+    var showTaskDiffered = function() {
+      showTask(id);
+    }
+    waiting.push(showTaskDiffered);
+    return;
+  }
+  var task = items[id];
+  if (!task) {
+    window.location.hash = "";
+    kanban.currentTask = null;
+  } else {
+    kanban.currentTask = clone(task);
+    window.location.hash = id;
+  }
 }
 
 Vue.config.debug = true;
@@ -231,7 +257,7 @@ Vue.component('task', {
       this.dragged = false;
     },
     edit: function() {
-      kanban.currentTask = clone(this.model);
+      showTask(this.model.id);
     }
   }
 })
@@ -260,10 +286,10 @@ Vue.component('edit-task', {
       }
       emit.update(action);
       actions.update(action);
-      kanban.currentTask = null;
+      showTask(null);
     },
     cancel: function() {
-      kanban.currentTask = null;
+      showTask(null);
     }
   }
 })
@@ -272,4 +298,12 @@ new Vue({
   el: "body",
   data: kanban,
 })
+
+window.addEventListener('hashchange', function() {
+    var path = window.location.hash;
+    showTask(path.substring(1));
+});
+
+var path = window.location.hash;
+showTask(path.substring(1));
 

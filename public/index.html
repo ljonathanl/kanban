@@ -38,11 +38,13 @@
       <template v-if="task != null">
       <div class="popup-background" @click="cancel"></div>
         <div class="edit-task" @click.stop>
-          <label>Id: <input type="text" v-model="task.id" disabled></label>
-          <label>Title: <textarea v-model="task.title"></textarea></label> 
+          <label>ID </label>
+          <input type="text" v-model="task.id" disabled>
+          <label>Title </label> 
+          <textarea v-model="task.title"></textarea>
           <p>
-            <button type="button" @click="edit">Save</button>
             <button type="button" @click="cancel">Cancel</button>
+            <button type="button" @click="edit">Save</button>
           </p>
         </div>
       </template>  
