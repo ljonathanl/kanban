@@ -92,6 +92,8 @@ Vue.component('kanban', {
     handleDragStart: function(event) {
       console.log("handleDragStart", event);
       if (dragTemp) return;
+      // for firefox
+      event.dataTransfer.setData('id', event.target.dataset.id);
       dragTemp = {};
       dragTemp.item = event.target.dataset.id;
       dragTemp.from = "kanban";
@@ -143,6 +145,8 @@ Vue.component('task', {
     },
     handleDragStart: function(event) {
       console.log("handleDragStart", event);
+      // for firefox
+      event.dataTransfer.setData('id', event.target.dataset.id);
       dragTemp = {};
       dragTemp.item = this.model.task.id;
       dragTemp.from = this.model.id;
