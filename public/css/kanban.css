@@ -9,7 +9,7 @@ html, body {
 	position: absolute;
 }
 
-.task-content {
+.new-task, .task-content {
 	width: 150px;
 	background-color: #999;
 	border: 1px solid #666;
@@ -20,7 +20,7 @@ html, body {
 	position: initial;
 }
 
-.task h3 {
+.new-task h3, .task h3 {
 	font-size: 14px;
 	margin: 10px;
 }
@@ -196,4 +196,17 @@ html, body {
 .edit-task textarea {
 	width: 400px;
 	height: 100px;
+}
+
+.menu {
+	position: fixed;
+	left: 50%;
+	bottom: 0;
+	width: 600px;
+	margin-left: -300px;
+	height: 100px;
+	border: 1px solid black;
+	z-index: 50;
+	background-color: #BBB;
+	padding: 5px;
 }

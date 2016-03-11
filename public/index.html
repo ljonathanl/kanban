@@ -50,6 +50,14 @@
       </template>  
     </script>
 
+    <script type="text/x-template" id="menu-template">
+      <div class="menu" @dragstart="handleDrag">
+        <div class="new-task" draggable=true>
+          <h3>New task</h3>
+        </div>
+      </div>
+    </script>
+
     <script type="text/x-template" id="zone-template">
       <div class="zone" :id="title">
         <h2>{{title}}</h2>
@@ -71,6 +79,8 @@
       <zone title="cms" class="line"></zone>
       <zone title="other" class="line"></zone>
     </kanban>
+
+    <menu></menu>
 
     <edit-task :task="currentTask"></edit-task>
 

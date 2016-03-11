@@ -50,7 +50,7 @@ var actions = {
     var movedItem = items[action.id];
     if (action.from == 'kanban') {
       kanban.items.$remove(movedItem);
-    } else {
+    } else if (items[action.from]) {
       items[action.from].task = null;
     }
     kanban.items.push(movedItem);
@@ -63,7 +63,7 @@ var actions = {
     var container = items[action.to];
     if (action.from == 'kanban') {
       kanban.items.$remove(movedItem);
-    } else {
+    } else if (items[action.from]) {
       items[action.from].task = null;
     }
     if (container.task) {
@@ -99,6 +99,12 @@ var waiting = [];
 var socket = io.connect('http://localhost:8080');
 socket.on('action', function (data) {
   actions[data.type](data.action);
+});
+socket.on('create', function (data) {
+  items[data.id] = data;
+});
+socket.on('show', function (data) {
+  showTask(data);
 });
 socket.on('data', function (data) {
   for (var k in kanban) {
@@ -184,7 +190,6 @@ Vue.component('kanban', {
 
       this.selected = false;
       emit.move(action);
-      actions.move(action);
     },
     handleDragOver: function(event) {
       this.selected = true;
@@ -234,7 +239,6 @@ Vue.component('task', {
 
       this.selected = false;
       emit.add(action);
-      actions.add(action);
     },
     handleDragOver: function(event) {
       var task = items[dragTemp.item];
@@ -272,6 +276,23 @@ Vue.component('zone', {
   }  
 })
 
+Vue.component('menu', {
+  template: '#menu-template',
+  methods: {
+    handleDrag: function(event) {
+      console.log("handleDragStart", event);
+      // for firefox
+      event.dataTransfer.setData('id', 'new');
+      dragTemp = {};
+      dragTemp.item = "new";
+      dragTemp.from = "menu";
+      dragTemp.x = event.offsetX;
+      dragTemp.y = event.offsetY;
+      console.log(dragTemp);
+    },
+  }
+})
+
 Vue.component('edit-task', {
   template: '#edit-task-template',
   props: {
@@ -285,7 +306,6 @@ Vue.component('edit-task', {
         value: this.task.title  
       }
       emit.update(action);
-      actions.update(action);
       showTask(null);
     },
     cancel: function() {

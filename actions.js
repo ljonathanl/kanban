@@ -15,7 +15,7 @@ var actions = {
     var movedItem = items[action.id];
     if (action.from == 'kanban') {
       remove(kanban.items, movedItem);
-    } else {
+    } else if (items[action.from]) {
       items[action.from].task = null;
     }
     kanban.items.push(movedItem);
@@ -28,7 +28,7 @@ var actions = {
     var container = items[action.to];
     if (action.from == 'kanban') {
       remove(kanban.items, movedItem);
-    } else {
+    } else if (items[action.from]) {
       items[action.from].task = null;
     }
     if (container.task) {
