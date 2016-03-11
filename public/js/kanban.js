@@ -15,6 +15,29 @@ function findItems(kanban) {
   }
 } 
 
+var zones = [];
+
+function addZone(id, rectangle) {
+  zones.push({id: id, rectangle: rectangle});
+}
+
+function getZones(position) {
+  var result = [];
+  for (var i = 0; i < zones.length; i++) {
+    var zone = zones[i];
+    if (position.x >= zone.rectangle.left 
+      && position.x <= zone.rectangle.right
+      && position.y >= zone.rectangle.top
+      && position.y <= zone.rectangle.bottom) {
+      result.push(zone.id);
+    }
+  }
+  if (result.length == 0) {
+    result.push('kanban');
+  }
+  return result;
+}
+
 var actions = {
   move: function(action) {
     console.log(action);
@@ -112,6 +135,7 @@ Vue.component('kanban', {
       var position = getDropPosition(event, this.$els.contents, dragTemp.x, dragTemp.y);
       var lastContainer = dragTemp.from;
       
+      console.log("zones", getZones(position));
       dragTemp = null;
       var action = {
         id: item,
@@ -179,7 +203,6 @@ Vue.component('task', {
     handleDragOver: function(event) {
       var task = items[dragTemp.item];
       while (task) {
-        console.log("subtask: ", task.id)
         if (task.id == this.model.id) return false;
         task = task.task;
       }
@@ -204,6 +227,9 @@ Vue.component('zone', {
   template: '#zone-template',
   props: {
     title: String
+  },
+  attached: function() {
+    addZone(this.title, this.$el.getBoundingClientRect());
   }  
 })
 
