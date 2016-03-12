@@ -247,7 +247,7 @@ Vue.component('task', {
   },
   computed: {
     background: function() {
-      return this.model.category + (this.selected ? " selected" : "") + (this.dragged ? " dragged" : ""); 
+      return this.model.category + (this.selected ? " selected" : ""); 
     },
   },
   methods: {

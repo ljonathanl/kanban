@@ -24,6 +24,7 @@
       <div class="task" :data-id="model.id" draggable=true @dblclick.stop="edit"
         @dragover.prevent="handleDragOver" @drop.prevent="handleDrop" @dragleave.stop="handleDragLeave"
         @dragend.stop="handleDragEnd" @dragstart="handleDrag"
+        :class="{dragged: dragged}"
         :style="{left: model.x + 'px', top: model.y + 'px'}">
         <div class="task-content" :class="background">
           <h3>{{model.title}}</h3>

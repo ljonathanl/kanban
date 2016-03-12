@@ -25,7 +25,6 @@ html, body {
 
 .innerTask {
 	position: initial;
-	margin-top: -10px;
 }
 
 h3 {
@@ -41,7 +40,8 @@ h3 {
 .kanban {
 	position: relative;
 	width: 3000px;
-	min-height: 1000px;
+	height: 1000px;
+	margin-bottom: 100px;
 }
 
 .contents {
@@ -188,6 +188,7 @@ h3 {
     width: 600px;
     margin-left: -300px;
     padding: 5px;
+    box-shadow: 3px 3px 4px 0px black;
 }
 
 .popup-background {
@@ -209,19 +210,26 @@ h3 {
 .edit-task textarea {
 	width: 400px;
 	height: 100px;
+	font-family: Arial;
 }
 
 .menu {
 	position: fixed;
 	left: 50%;
-	bottom: 0;
+	bottom: 10px;
 	width: 600px;
 	margin-left: -300px;
-	height: 50px;
+	height: 60px;
 	border: 1px solid black;
 	z-index: 50;
 	background-color: #BBB;
-	padding: 5px;
+	box-shadow: 2px 2px 4px 0px black;
+}
+
+button[type='button']:last-child {
+	font-weight: bold;
+	color: #FFF;
+	background-color: #F50;
 }
 
 .archive {
