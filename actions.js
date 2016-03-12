@@ -46,7 +46,32 @@ var actions = {
     console.log(action);
     var updatedItem = items[action.id];
     updatedItem[action.property] = action.value;   
-  }  
+  },
+  archive: function(action) {
+    console.log(action);
+    var movedItem = items[action.id];
+    if (action.from == 'kanban') {
+      remove(kanban.items, movedItem);
+    } else if (items[action.from]) {
+      items[action.from].task = null;
+    }
+    movedItem.parent = null;
+    kanban.archive.push(movedItem);
+  },
+  remove: function(action) {
+    console.log(action);
+    var movedItem = items[action.id];
+    if (action.from == 'kanban') {
+      kanban.items.$remove(movedItem);
+    } else if (items[action.from]) {
+      items[action.from].task = null;
+    }
+    var subTask = movedItem;
+    while (subTask) {
+      delete items[subTask.id];
+      subTask = subTask.task;
+    }
+  },  
 }
 
 module.exports = exports = actions;

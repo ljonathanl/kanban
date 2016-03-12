@@ -16,14 +16,26 @@ html, body {
 	user-select: none;
 }
 
-.innerTask {
-	position: initial;
+.new-task {
+	display: inline-block;
+	position: absolute;
+	left: 0;
+	margin: 10px;
 }
 
-.new-task h3, .task h3 {
+.innerTask {
+	position: initial;
+	margin-top: -10px;
+}
+
+h3 {
 	font-size: 14px;
 	margin: 10px;
 	text-align: center;
+}
+
+.innerTask h3 {
+	margin: 3px 10px;
 }
 
 .kanban {
@@ -46,7 +58,7 @@ html, body {
 }
 
 .dragged {
-	background-color: #0F0;
+	opacity: 0.5;
 }
 
 .zone {
@@ -205,11 +217,31 @@ html, body {
 	bottom: 0;
 	width: 600px;
 	margin-left: -300px;
-	height: 100px;
+	height: 50px;
 	border: 1px solid black;
 	z-index: 50;
 	background-color: #BBB;
 	padding: 5px;
+}
+
+.archive {
+	position: absolute;
+	right: 100px;
+	display: inline-block;
+	margin: 10px;
+	width: 150px;
+	background-color: #f39c12;
+	border: 1px solid black;
+}
+
+.trash {
+	position: absolute;
+	right: 0px;
+	display: inline-block;
+	margin: 10px;
+	width: 100px;
+	background-color: #EC644B;
+	border: 1px solid black;
 }
 
 .back {

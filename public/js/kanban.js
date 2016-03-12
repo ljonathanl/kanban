@@ -1,5 +1,6 @@
 var kanban = {
   items: [],
+  archive: [],
   currentTask: null,
   ready: false,
   categories: ["back", "front", "cms", "db", "impediment", "bug", "release", "other"]  
@@ -7,9 +8,9 @@ var kanban = {
 
 var items = {};
 
-function findItems(kanban) {
-  for (var i = 0; i < kanban.items.length; i++) {
-    var item = kanban.items[i];
+function findItems(tasks) {
+  for (var i = 0; i < tasks.length; i++) {
+    var item = tasks[i];
     items[item.id] = item;
     while(item.task) {
       item = item.task;
@@ -88,6 +89,31 @@ var actions = {
   create: function(action) {
     Vue.set(items, action.id, action);
   },
+  archive: function(action) {
+    console.log(action);
+    var movedItem = items[action.id];
+    if (action.from == 'kanban') {
+      kanban.items.$remove(movedItem);
+    } else if (items[action.from]) {
+      items[action.from].task = null;
+    }
+    Vue.set(movedItem, 'parent', null);
+    kanban.archive.push(movedItem);
+  },
+  remove: function(action) {
+    console.log(action);
+    var movedItem = items[action.id];
+    if (action.from == 'kanban') {
+      kanban.items.$remove(movedItem);
+    } else if (items[action.from]) {
+      items[action.from].task = null;
+    }
+    var subTask = movedItem;
+    while (subTask) {
+      delete items[subTask.id];
+      subTask = subTask.task;
+    }
+  },
 }
 
 var emit = {
@@ -99,7 +125,13 @@ var emit = {
   },
   update: function(action) {
     socket.emit('action', { type: 'update', action: action });
-  }
+  },
+  remove: function(action) {
+    socket.emit('action', { type: 'remove', action: action });
+  },
+  archive: function(action) {
+    socket.emit('action', { type: 'archive', action: action });
+  },
 }
 
 var waiting = [];
@@ -117,7 +149,8 @@ socket.on('data', function (data) {
       kanban[k] = data[k];
     }
   }
-  findItems(kanban);
+  findItems(kanban.items);
+  findItems(kanban.archive);
   kanban.ready = true;
   for (var i = 0; i < waiting.length; i++) {
     waiting[i]();
@@ -143,7 +176,7 @@ function showTask(id) {
   }
   var task = items[id];
   if (!task) {
-    window.location.hash = "";
+    history.pushState("", document.title, window.location.pathname);
     kanban.currentTask = null;
   } else {
     kanban.currentTask = clone(task);
@@ -185,7 +218,7 @@ Vue.component('kanban', {
       var position = getDropPosition(event, this.$els.contents, dragTemp.x, dragTemp.y);
       var lastContainer = dragTemp.from;
       
-      console.log("zones", getZones(position));
+      // console.log("zones", getZones(position));
       dragTemp = null;
       var action = {
         id: item,
@@ -301,6 +334,64 @@ Vue.component('menu', {
       console.log(dragTemp);
     },
   }
+})
+
+Vue.component('trash', {
+  template: '#trash-template',
+  props: {
+    selected: Boolean
+  },
+  methods: {
+    handleDrop: function(event) {
+      console.log("handleDrop", event);
+      var item = dragTemp.item;
+      var lastContainer = dragTemp.from;
+      
+      dragTemp = null;
+      var action = {
+        id: item,
+        from: lastContainer   
+      };
+
+      this.selected = false;
+      emit.remove(action);
+    },
+    handleDragOver: function(event) {
+      this.selected = true;
+    },
+    handleDragLeave: function(event) {
+      this.selected = false;
+    }
+  },
+})
+
+Vue.component('archive', {
+  template: '#archive-template',
+  props: {
+    selected: Boolean
+  },
+  methods: {
+    handleDrop: function(event) {
+      console.log("handleDrop", event);
+      var item = dragTemp.item;
+      var lastContainer = dragTemp.from;
+      
+      dragTemp = null;
+      var action = {
+        id: item,
+        from: lastContainer   
+      };
+
+      this.selected = false;
+      emit.archive(action);
+    },
+    handleDragOver: function(event) {
+      this.selected = true;
+    },
+    handleDragLeave: function(event) {
+      this.selected = false;
+    }
+  },
 })
 
 Vue.component('edit-task', {

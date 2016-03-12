@@ -55,11 +55,27 @@
       </template>  
     </script>
 
+    <script type="text/x-template" id="archive-template">
+      <div class="archive" :class="{selected: selected}"
+        @dragover.prevent="handleDragOver" @drop.prevent="handleDrop" @dragleave.stop="handleDragLeave">
+        <h3>Archive</h3>
+      </div>
+    </script>
+
+    <script type="text/x-template" id="trash-template">
+      <div class="trash" :class="{selected: selected}"
+        @dragover.prevent="handleDragOver" @drop.prevent="handleDrop" @dragleave.stop="handleDragLeave">
+        <h3>Trash</h3>
+      </div>
+    </script>
+
     <script type="text/x-template" id="menu-template">
       <div class="menu" @dragstart="handleDrag">
         <div class="new-task" draggable=true>
           <h3>New task</h3>
         </div>
+        <archive></archive>
+        <trash></trash>
       </div>
     </script>
 

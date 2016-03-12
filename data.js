@@ -9,23 +9,26 @@ var kanban = {
       title: 'Partially show Client ID in Application details', id: 'tsk4', x: 214, y: 197, category: "back",
       task: {title: 'Partially show Client ID in Application details front', id: 'tsk6', x: 10, y: 30, parent: 'tsk4'}
     },
-  ]  
+  ],
+  archive: []  
 };
 
 var items = {};
 
-function findItems(kanban) {
-  for (var i = 0; i < kanban.items.length; i++) {
-    var item = kanban.items[i];
+function findItems(tasks) {
+  for (var i = 0; i < tasks.length; i++) {
+    var item = tasks[i];
     items[item.id] = item;
     while(item.task) {
       item = item.task;
       items[item.id] = item;
     }
   }
-}  
+} 
+ 
 
-findItems(kanban); 
+findItems(kanban.items);
+findItems(kanban.archive); 
 
 module.exports = exports = {
   kanban: kanban,
