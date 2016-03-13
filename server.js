@@ -1,3 +1,4 @@
+var config = require('./config');
 var data = require('./data');
 var actions = require('./actions');
 var express = require('express');
@@ -5,7 +6,7 @@ var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
-server.listen(8080);
+server.listen(config.port);
 
 app.get('/', function (req, res) {
   res.sendFile(__dirname + '/public/index.html');
