@@ -29,6 +29,7 @@ io.on('connection', function (socket) {
   	}
   	actions[actionData.type](actionData.action);
     io.sockets.emit('action', actionData);
+    data.save();
   });
 });
 
