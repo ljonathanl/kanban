@@ -45,7 +45,9 @@ var actions = {
   update: function(action) {
     console.log(action);
     var updatedItem = items[action.id];
-    updatedItem[action.property] = action.value;   
+    for (var k in action.properties) {
+      updatedItem[k] = action.properties[k];   
+    }
   },
   archive: function(action) {
     console.log(action);

@@ -23,7 +23,7 @@ function save() {
   store.put('kanban', kanban);
 }
 
-if (!kanban) {
+if (!kanban || !kanban.items) {
   kanban = {items: [], archive: []};
   save();
 }
