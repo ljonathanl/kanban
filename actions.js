@@ -64,7 +64,7 @@ var actions = {
     console.log(action);
     var movedItem = items[action.id];
     if (action.from == 'kanban') {
-      kanban.items.$remove(movedItem);
+      remove(kanban.items, movedItem);
     } else if (items[action.from]) {
       items[action.from].task = null;
     }
