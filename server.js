@@ -6,7 +6,7 @@ var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
-server.listen(config.port);
+server.listen(config.port, config.host);
 
 app.get('/', function (req, res) {
   res.sendFile(__dirname + '/public/index.html');

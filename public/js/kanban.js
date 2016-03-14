@@ -117,7 +117,33 @@ function emit(type, action) {
 
 var waiting = [];
 
-var socket = io.connect('http://localhost:8080');
+var socket = io.connect('/');
+
+if (window.location.hostname.indexOf("kermit") >= 0) {
+    var enginePrototype = Object.getPrototypeOf(socket.io.engine);
+    var oldCreateTransport = enginePrototype.createTransport;
+    var initHack = false;
+    enginePrototype.createTransport = function (name) {
+        var instance = oldCreateTransport.call(this, name);
+        if (name == "websocket" && !initHack) {
+            initHack = true;
+            var wsPrototype = Object.getPrototypeOf(instance);
+            var oldUri = wsPrototype.uri;
+            wsPrototype.uri = function () {
+                var result = oldUri.apply(this);
+                var index = result.indexOf("socket.io");
+                var scheme = "ws";
+                if (result.indexOf("wss") == 0) {
+                    scheme = "wss";
+                }
+                result = result.substring(0, index) + "_" + scheme + "/" + result.substring(index);
+                return result;
+            };
+        }
+        return instance;
+    };
+}
+
 socket.on('action', function (data) {
   actions[data.type](data.action);
 });
