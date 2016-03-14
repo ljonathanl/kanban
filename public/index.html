@@ -48,6 +48,7 @@
             <input type="radio" :value="category" v-model="task.category">
             <span :class="category">&nbsp;{{category}}&nbsp;</span>
           </template>
+          <p>zones: {{zones}}</p>
           <p>
             <button type="button" @click="cancel">Cancel</button>
             <button type="button" @click="edit">Save</button>
@@ -96,6 +97,7 @@
       <zone title="qualification"></zone>
       <zone title="preproduction"></zone>
       <zone title="production"></zone>
+      <zone title="test"></zone>
       <zone title="back" class="line"></zone>
       <zone title="front" class="line"></zone>
       <zone title="cms" class="line"></zone>

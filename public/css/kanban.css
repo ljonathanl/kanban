@@ -107,6 +107,13 @@ h3 {
 	border-right: solid 2px #444;
 }
 
+#test {
+	width: 200px;
+	height: 800px;
+	left: 1800px;
+	border-left: dotted 1px #444;
+}
+
 #done {
 	width: 400px;
 	height: 100%;

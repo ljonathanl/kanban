@@ -26,17 +26,22 @@ function clone(object) {
 }
 
 function addZone(id, rectangle) {
+  console.log("zone", id, rectangle);
   zones.push({id: id, rectangle: rectangle});
 }
 
-function getZones(position) {
+function getZones(id) {
+  var task = items[id];
+  while(task.parent) {
+    task = items[task.parent];
+  }
   var result = [];
   for (var i = 0; i < zones.length; i++) {
     var zone = zones[i];
-    if (position.x >= zone.rectangle.left 
-      && position.x <= zone.rectangle.right
-      && position.y >= zone.rectangle.top
-      && position.y <= zone.rectangle.bottom) {
+    if (task.x >= zone.rectangle.left 
+      && task.x <= zone.rectangle.right
+      && task.y >= zone.rectangle.top
+      && task.y <= zone.rectangle.bottom) {
       result.push(zone.id);
     }
   }
@@ -314,7 +319,8 @@ Vue.component('zone', {
     title: String
   },
   attached: function() {
-    addZone(this.title, this.$el.getBoundingClientRect());
+    var el = this.$el;
+    addZone(this.title, {top: el.offsetTop, bottom: el.offsetTop + el.offsetHeight, left: el.offsetLeft, right: el.offsetLeft + el.offsetWidth});
   }  
 })
 
@@ -417,6 +423,12 @@ Vue.component('edit-task', {
     },
     cancel: function() {
       showTask(null);
+    }
+  },
+  computed: {
+    zones: function () {
+      if (!this.task) return "";
+      return getZones(this.task.id).join(", ");
     }
   },
   attached: function() {
