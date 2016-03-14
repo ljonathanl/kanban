@@ -42,7 +42,7 @@
           <label>ID</label>
           <input type="text" v-model="task.id" disabled>
           <label>Title</label> 
-          <textarea v-model="task.title"></textarea>
+          <textarea v-model="task.title" v-el:title></textarea>
           <label>Category</label>
           <template v-for="category in categories">
             <input type="radio" :value="category" v-model="task.category">

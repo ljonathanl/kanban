@@ -48,7 +48,6 @@ function getZones(position) {
 
 var actions = {
   move: function(action) {
-    console.log(action);
     var movedItem = items[action.id];
     if (action.from == 'kanban') {
       kanban.items.$remove(movedItem);
@@ -61,7 +60,6 @@ var actions = {
     Vue.set(movedItem, 'parent', null);
   },
   add: function(action) {
-    console.log(action);
     var movedItem = items[action.id];
     var container = items[action.to];
     if (action.from == 'kanban') {
@@ -80,7 +78,6 @@ var actions = {
     Vue.set(movedItem, 'parent', container.id);
   },
   update: function(action) {
-    console.log(action);
     var updatedItem = items[action.id];
     for (var k in action.properties) {
       Vue.set(updatedItem, k, action.properties[k]);   
@@ -90,7 +87,6 @@ var actions = {
     Vue.set(items, action.id, action);
   },
   archive: function(action) {
-    console.log(action);
     var movedItem = items[action.id];
     if (action.from == 'kanban') {
       kanban.items.$remove(movedItem);
@@ -101,7 +97,6 @@ var actions = {
     kanban.archive.push(movedItem);
   },
   remove: function(action) {
-    console.log(action);
     var movedItem = items[action.id];
     if (action.from == 'kanban') {
       kanban.items.$remove(movedItem);
@@ -116,22 +111,8 @@ var actions = {
   },
 }
 
-var emit = {
-  move: function(action) {
-    socket.emit('action', { type: 'move', action: action });
-  },
-  add: function(action) {
-    socket.emit('action', { type: 'add', action: action });
-  },
-  update: function(action) {
-    socket.emit('action', { type: 'update', action: action });
-  },
-  remove: function(action) {
-    socket.emit('action', { type: 'remove', action: action });
-  },
-  archive: function(action) {
-    socket.emit('action', { type: 'archive', action: action });
-  },
+function emit(type, action) {
+  socket.emit('action', { type: type, action: action });
 }
 
 var waiting = [];
@@ -196,7 +177,6 @@ Vue.component('kanban', {
   },
   methods: {
     handleDragStart: function(event) {
-      console.log("handleDragStart", event);
       if (dragTemp) return;
       // for firefox
       event.dataTransfer.setData('id', event.target.dataset.id);
@@ -205,10 +185,8 @@ Vue.component('kanban', {
       dragTemp.from = "kanban";
       dragTemp.x = event.offsetX;
       dragTemp.y = event.offsetY;
-      console.log(dragTemp);
     },
     handleDrop: function(event) {
-      console.log("handleDrop", event);
       var item = dragTemp.item;
       var offsetX = dragTemp.x;
       var offsetY = dragTemp.y;
@@ -227,7 +205,7 @@ Vue.component('kanban', {
       };
 
       this.selected = false;
-      emit.move(action);
+      emit('move', action);
     },
     handleDragOver: function(event) {
       this.selected = true;
@@ -252,7 +230,6 @@ Vue.component('task', {
   },
   methods: {
     handleDragStart: function(event) {
-      console.log("handleDragStart", event);
       // for firefox
       event.dataTransfer.setData('id', event.target.dataset.id);
       dragTemp = {};
@@ -260,7 +237,6 @@ Vue.component('task', {
       dragTemp.from = this.model.id;
       dragTemp.x = event.offsetX;
       dragTemp.y = event.offsetY;
-      console.log(dragTemp);
     },
     handleDrop: function(event) {
       var task = items[dragTemp.item];
@@ -268,7 +244,6 @@ Vue.component('task', {
         if (task.id == this.model.id) return false;
         task = task.task;
       }
-      console.log("handleDrop", event);
       event.stopPropagation();
       var item = dragTemp.item;
       var lastContainer = dragTemp.from;
@@ -281,7 +256,7 @@ Vue.component('task', {
       }
 
       this.selected = false;
-      emit.add(action);
+      emit('add', action);
     },
     handleDragOver: function(event) {
       var task = items[dragTemp.item];
@@ -296,11 +271,9 @@ Vue.component('task', {
       this.selected = false;
     },
     handleDrag: function(event) {
-      console.log("handleDrag", event);
       this.dragged = true;
     },
     handleDragEnd: function(event) {
-      console.log("handleDragEnd", event);
       this.dragged = false;
     },
     edit: function() {
@@ -323,7 +296,6 @@ Vue.component('menu', {
   template: '#menu-template',
   methods: {
     handleDrag: function(event) {
-      console.log("handleDragStart", event);
       // for firefox
       event.dataTransfer.setData('id', 'new');
       dragTemp = {};
@@ -331,7 +303,6 @@ Vue.component('menu', {
       dragTemp.from = "menu";
       dragTemp.x = event.offsetX;
       dragTemp.y = event.offsetY;
-      console.log(dragTemp);
     },
   }
 })
@@ -343,7 +314,6 @@ Vue.component('trash', {
   },
   methods: {
     handleDrop: function(event) {
-      console.log("handleDrop", event);
       var item = dragTemp.item;
       var lastContainer = dragTemp.from;
       
@@ -354,7 +324,7 @@ Vue.component('trash', {
       };
 
       this.selected = false;
-      emit.remove(action);
+      emit('remove', action);
     },
     handleDragOver: function(event) {
       this.selected = true;
@@ -372,7 +342,6 @@ Vue.component('archive', {
   },
   methods: {
     handleDrop: function(event) {
-      console.log("handleDrop", event);
       var item = dragTemp.item;
       var lastContainer = dragTemp.from;
       
@@ -383,7 +352,7 @@ Vue.component('archive', {
       };
 
       this.selected = false;
-      emit.archive(action);
+      emit('archive', action);
     },
     handleDragOver: function(event) {
       this.selected = true;
@@ -416,13 +385,20 @@ Vue.component('edit-task', {
           id: this.task.id,
           properties: properties  
         }
-        emit.update(action);
+        emit('update', action);
       }
       showTask(null);
     },
     cancel: function() {
       showTask(null);
     }
+  },
+  attached: function() {
+    this.$watch('task', function (val) {
+      if (val && val.title == "New task") {
+        this.$els.title.select();
+      }
+    })
   }
 })
 
