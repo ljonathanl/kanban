@@ -28,7 +28,6 @@ function clone(object) {
 }
 
 function addZone(id, rectangle) {
-  console.log("zone", id, rectangle);
   zones.push({id: id, rectangle: rectangle});
 }
 
@@ -158,18 +157,17 @@ socket.on('show', function (data) {
   showTask(data);
 });
 socket.on('data', function (data) {
+  console.log('data', data);
   items = {};
-  for (var k in kanban) {
-    if (k in data) {
-      kanban[k] = data[k];
-    }
-  }
+  kanban.items = data.items;
+  kanban.archive = data.archive;
   findItems(kanban.items);
   findItems(kanban.archive);
   kanban.ready = true;
   for (var i = 0; i < waiting.length; i++) {
     waiting[i]();
   }
+  waiting = [];
 });
 
 var dragTemp = null;
