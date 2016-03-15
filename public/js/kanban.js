@@ -3,8 +3,10 @@ var kanban = {
   archive: [],
   currentTask: null,
   ready: false,
-  categories: ["back", "front", "cms", "db", "impediment", "bug", "release", "other"]  
+  categories: ["admin", "developer", "partner", "db", "impediment", "bug", "release", "other"]  
 };
+
+var editableProperties = {'title': true, 'category': true};
 
 var items = {};
 
@@ -156,6 +158,7 @@ socket.on('show', function (data) {
   showTask(data);
 });
 socket.on('data', function (data) {
+  items = {};
   for (var k in kanban) {
     if (k in data) {
       kanban[k] = data[k];
@@ -406,7 +409,7 @@ Vue.component('edit-task', {
       var originalTask = items[this.task.id];
       var properties = {};
       var hasChanged = false;
-      for (var k in originalTask) {
+      for (var k in editableProperties) {
         if (originalTask[k] != this.task[k]) {
           properties[k] = this.task[k];
           hasChanged = true;

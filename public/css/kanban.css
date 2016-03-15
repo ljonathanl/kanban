@@ -259,15 +259,15 @@ button[type='button']:last-child {
 	border: 1px solid black;
 }
 
-.back {
+.admin {
 	background-color: #3498db;
 }
 
-.front {
+.developer {
 	background-color: #2ecc71;
 }
 
-.cms {
+.partner {
 	background-color: #C5EFF7;
 }
 

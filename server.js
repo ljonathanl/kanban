@@ -12,6 +12,10 @@ app.get('/', function (req, res) {
   res.sendFile(__dirname + '/public/index.html');
 });
 
+app.get('/kanban.json', function (req, res) {
+  res.json(data.kanban);
+});
+
 
 app.use(express.static('public'));
 
