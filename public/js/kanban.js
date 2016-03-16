@@ -6,7 +6,7 @@ var kanban = {
   categories: ["admin", "developer", "partner", "db", "impediment", "bug", "release", "other"]  
 };
 
-var editableProperties = {'title': true, 'category': true};
+var editableProperties = {'title': true, 'category': true, 'notes': true};
 
 var items = {};
 
@@ -396,17 +396,21 @@ Vue.component('archive', {
   },
 })
 
+var editor;
+
 Vue.component('edit-task', {
   template: '#edit-task-template',
   props: {
     task: null,
     categories: Array,
+    editingNotes: Boolean
   }, 
   methods: {
     edit: function() {
       var originalTask = items[this.task.id];
       var properties = {};
       var hasChanged = false;
+      this.finishEditNotes();
       for (var k in editableProperties) {
         if (originalTask[k] != this.task[k]) {
           properties[k] = this.task[k];
@@ -420,10 +424,21 @@ Vue.component('edit-task', {
         }
         emit('update', action);
       }
+      this.close();
+    },
+    close: function() {
+      this.editingNotes = false;
       showTask(null);
     },
-    cancel: function() {
-      showTask(null);
+   startEditNotes: function() {
+      this.editingNotes = true;
+      Vue.nextTick(function () {
+        editor = CKEDITOR.replace('notes-editor');
+      });
+    },
+    finishEditNotes: function() {
+      Vue.set(this.task, "notes", editor.getData());
+      this.editingNotes = false;
     }
   },
   computed: {

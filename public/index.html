@@ -38,13 +38,13 @@
 
     <script type="text/x-template" id="edit-task-template">
       <template v-if="task != null">
-        <div class="popup-background"></div>
-        <div class="edit-task" @click.stop>
+        <div class="popup-background" @click.stop="finishEditNotes"></div>
+        <div class="edit-task">
           <div class="left-panel">
             <label>ID</label>
             <input type="text" v-model="task.id" disabled>
             <label>Title</label> 
-            <textarea v-model="task.title" v-el:title></textarea>
+            <textarea class="title" v-model="task.title" v-el:title></textarea>
             <label>Category</label>
             <template v-for="category in categories">
               <input type="radio" :value="category" v-model="task.category">
@@ -52,11 +52,15 @@
             </template>
             <p>zones: {{zones}}</p>
           </div>
-          <div class="right-panel">
-            <div class="notes">{{{task.notes ? task.notes : 'Double click to edit notes'}}}</div>
+          <div class="right-panel" @click.stop>
+            <label>Notes</label>
+            <div v-if="!editingNotes" class="notes" @dblclick="startEditNotes">{{{task.notes ? task.notes : 'Double click to edit notes'}}}</div>
+            <div v-else>
+              <textarea class="notes" v-model="task.notes" name="notes-editor" id="notes-editor"></textarea>
+            </div>
           </div>
           <div class="buttons">
-            <button type="button" @click="cancel">Cancel</button>
+            <button type="button" @click="close">Cancel</button>
             <button type="button" @click="edit">Save</button>
           </div>
         </div>
