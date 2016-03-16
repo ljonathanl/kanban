@@ -7,6 +7,7 @@
     <title>Kanban</title>
     <link href="css/kanban.css" rel="stylesheet">
     <script src="js/vue.js"></script>
+    <script src="js/ckeditor/ckeditor.js"></script>
     <script src="/socket.io/socket.io.js"></script>
   </head>
   <body>
@@ -37,22 +38,27 @@
 
     <script type="text/x-template" id="edit-task-template">
       <template v-if="task != null">
-      <div class="popup-background" @click="cancel"></div>
+        <div class="popup-background"></div>
         <div class="edit-task" @click.stop>
-          <label>ID</label>
-          <input type="text" v-model="task.id" disabled>
-          <label>Title</label> 
-          <textarea v-model="task.title" v-el:title></textarea>
-          <label>Category</label>
-          <template v-for="category in categories">
-            <input type="radio" :value="category" v-model="task.category">
-            <span :class="category">&nbsp;{{category}}&nbsp;</span>
-          </template>
-          <p>zones: {{zones}}</p>
-          <p>
+          <div class="left-panel">
+            <label>ID</label>
+            <input type="text" v-model="task.id" disabled>
+            <label>Title</label> 
+            <textarea v-model="task.title" v-el:title></textarea>
+            <label>Category</label>
+            <template v-for="category in categories">
+              <input type="radio" :value="category" v-model="task.category">
+              <span :class="category">&nbsp;{{category}}&nbsp;</span>
+            </template>
+            <p>zones: {{zones}}</p>
+          </div>
+          <div class="right-panel">
+            <div class="notes">{{{task.notes ? task.notes : 'Double click to edit notes'}}}</div>
+          </div>
+          <div class="buttons">
             <button type="button" @click="cancel">Cancel</button>
             <button type="button" @click="edit">Save</button>
-          </p>
+          </div>
         </div>
       </template>  
     </script>
