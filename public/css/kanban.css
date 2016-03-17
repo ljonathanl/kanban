@@ -262,6 +262,13 @@ h3 {
 	font-family: Arial;
 }
 
+.edit-task select {
+	height: 30px;
+	width: 150px;
+	font-size: 18px;
+	font-weight: bold;
+}
+
 .save-button {
 	font-size: 18px;
 	position: absolute;

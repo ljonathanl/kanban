@@ -444,7 +444,10 @@ Vue.component('edit-task', {
         editor = null;
         this.editingNotes = false;
       }
-    }
+    },
+    endEditTitle: function() {
+      this.task.title = this.$els.title.innerText;
+    },
   },
   computed: {
     zones: function () {
@@ -455,7 +458,8 @@ Vue.component('edit-task', {
   attached: function() {
     this.$watch('task', function (val) {
       if (val && val.title == "New task") {
-        this.$els.title.select();
+        this.$els.title.focus();
+        document.execCommand('selectAll', false, null);
       }
     })
   }

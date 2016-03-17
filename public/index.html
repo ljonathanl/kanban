@@ -46,15 +46,17 @@
               <input type="text" v-model="task.id" disabled>
             </p>
             <p>
-              <label>Title</label> 
-              <textarea class="title" v-model="task.title" v-el:title></textarea>
+              <label>Title</label>
+              <div class="task-content" :class="task.category">
+                <h3 contenteditable="true" v-el:title @blur="endEditTitle">{{task.title}}</h3>
+              </div> 
+              <!-- <textarea class="title" v-model="task.title" v-el:title></textarea> -->
             </p>
             <p>
               <label>Category</label>
-              <template v-for="category in categories">
-                <input type="radio" :value="category" v-model="task.category">
-                <span :class="category">&nbsp;{{category}}&nbsp;</span>
-              </template>
+              <select v-model="task.category" :class="task.category">
+                <option v-for="category in categories" :class="category">{{category}}</option>
+              </select>
             </p>
             <p><label>Zones</label>{{zones}}</p>
           </div>
