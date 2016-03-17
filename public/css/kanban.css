@@ -25,6 +25,7 @@ html, body {
 
 .innerTask {
 	position: initial;
+	margin-top: -1px;
 }
 
 h3 {
@@ -301,32 +302,40 @@ button[type='button']:last-child {
 
 .admin {
 	background-color: #3498db;
+	border: 1px solid #114364;
 }
 
 .developer {
 	background-color: #2ecc71;
+	border: 1px solid #186B3C;
 }
 
 .partner {
 	background-color: #C5EFF7;
+	border: 1px solid #116F80;
 }
 
 .other {
 	background-color: #95a5a6;
+	border: 1px solid #394444;
 }
 
 .bug {
 	background-color: #D2527F;
+	border: 1px solid #6D1D39;
 }
 
 .release {
 	background-color: #f39c12;
+	border: 1px solid #845506;
 }
 
 .db {
 	background-color: #BE90D4;
+	border: 1px solid #70368B;
 }
 
 .impediment {
 	background-color: #EC644B;
+	border: 1px solid #91220F;
 }
