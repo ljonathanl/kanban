@@ -158,33 +158,33 @@ h3 {
 }
 
 #back {
-	width: 1000px;
+	width: 600px;
 	height: 350px;
-	left: 1000px;
+	left: 1400px;
 	border-bottom: dotted 2px #5F9EA0;
 }
 
 #front {
 	top: 350px;
-	width: 1000px;
+	width: 600px;
 	height: 250px;
-	left: 1000px;
+	left: 1400px;
 	border-bottom: dotted 2px #5F9EA0;
 }
 
 #cms {
 	top: 600px;
-	width: 1000px;
+	width: 600px;
 	height: 200px;
-	left: 1000px;
+	left: 1400px;
 	border-bottom: dotted 2px #5F9EA0;
 }
 
 #other {
 	top: 800px;
-	width: 1000px;
+	width: 600px;
 	height: 200px;
-	left: 1000px;
+	left: 1400px;
 }
 
 .edit-task {
