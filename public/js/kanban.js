@@ -434,6 +434,7 @@ Vue.component('edit-task', {
       this.editingNotes = true;
       Vue.nextTick(function () {
         editor = CKEDITOR.replace('notes-editor');
+        editor.config.height = 300;
       });
     },
     finishEditNotes: function() {
