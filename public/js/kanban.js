@@ -428,9 +428,10 @@ Vue.component('edit-task', {
     },
     close: function() {
       this.editingNotes = false;
+      editor = null;
       showTask(null);
     },
-   startEditNotes: function() {
+    startEditNotes: function() {
       this.editingNotes = true;
       Vue.nextTick(function () {
         editor = CKEDITOR.replace('notes-editor');
@@ -438,8 +439,11 @@ Vue.component('edit-task', {
       });
     },
     finishEditNotes: function() {
-      Vue.set(this.task, "notes", editor.getData());
-      this.editingNotes = false;
+      if (editor) {
+        Vue.set(this.task, "notes", editor.getData());
+        editor = null;
+        this.editingNotes = false;
+      }
     }
   },
   computed: {

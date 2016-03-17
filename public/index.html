@@ -41,28 +41,34 @@
         <div class="popup-background" @click.stop="finishEditNotes"></div>
         <div class="edit-task">
           <div class="left-panel">
-            <label>ID</label>
-            <input type="text" v-model="task.id" disabled>
-            <label>Title</label> 
-            <textarea class="title" v-model="task.title" v-el:title></textarea>
-            <label>Category</label>
-            <template v-for="category in categories">
-              <input type="radio" :value="category" v-model="task.category">
-              <span :class="category">&nbsp;{{category}}&nbsp;</span>
-            </template>
-            <p>zones: {{zones}}</p>
+            <p>
+              <label>ID</label>
+              <input type="text" v-model="task.id" disabled>
+            </p>
+            <p>
+              <label>Title</label> 
+              <textarea class="title" v-model="task.title" v-el:title></textarea>
+            </p>
+            <p>
+              <label>Category</label>
+              <template v-for="category in categories">
+                <input type="radio" :value="category" v-model="task.category">
+                <span :class="category">&nbsp;{{category}}&nbsp;</span>
+              </template>
+            </p>
+            <p><label>Zones</label>{{zones}}</p>
           </div>
           <div class="right-panel" @click.stop>
-            <label>Notes</label>
-            <div v-if="!editingNotes" class="notes" @dblclick="startEditNotes">{{{task.notes ? task.notes : 'Double click to edit notes'}}}</div>
-            <div v-else>
-              <textarea class="notes" v-model="task.notes" name="notes-editor" id="notes-editor"></textarea>
-            </div>
+            <p>
+              <label>Notes</label>
+              <div v-if="!editingNotes" class="notes" @dblclick="startEditNotes">{{{task.notes ? task.notes : 'Double click to edit notes'}}}</div>
+              <div v-else>
+                <textarea class="notes" v-model="task.notes" name="notes-editor" id="notes-editor"></textarea>
+              </div>
+            </p>  
           </div>
-          <div class="buttons">
-            <button type="button" @click="close">Cancel</button>
-            <button type="button" @click="edit">Save</button>
-          </div>
+          <button type="button" class="close-button" @click="close">X</button>
+          <button type="button" class="save-button" @click="edit">Save</button>
         </div>
       </template>  
     </script>
@@ -70,21 +76,21 @@
     <script type="text/x-template" id="archive-template">
       <div class="archive" :class="{selected: selected}"
         @dragover.prevent="handleDragOver" @drop.prevent="handleDrop" @dragleave.stop="handleDragLeave">
-        <h3>Archive</h3>
+        <span class="icon-folder"></span>Archive
       </div>
     </script>
 
     <script type="text/x-template" id="trash-template">
       <div class="trash" :class="{selected: selected}"
         @dragover.prevent="handleDragOver" @drop.prevent="handleDrop" @dragleave.stop="handleDragLeave">
-        <h3>Trash</h3>
+        <span class="icon-bin"></span>Trash
       </div>
     </script>
 
     <script type="text/x-template" id="menu-template">
       <div class="menu" @dragstart="handleDrag">
         <div class="new-task" draggable=true>
-          <h3>New task</h3>
+          <span class="icon-file-empty"></span>New task
         </div>
         <archive></archive>
         <trash></trash>

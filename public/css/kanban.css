@@ -9,18 +9,11 @@ html, body {
 	position: absolute;
 }
 
-.new-task, .task-content {
+.task-content {
 	width: 150px;
 	background-color: #999;
 	border: 1px solid #666;
 	user-select: none;
-}
-
-.new-task {
-	display: inline-block;
-	position: absolute;
-	left: 0;
-	margin: 10px;
 }
 
 .innerTask {
@@ -86,6 +79,7 @@ h3 {
 }
 
 #backlog {
+	top: 4px;
 	left: 0px;
 	border-right: dashed 2px #5F9EA0;
 	width: 600px;
@@ -93,6 +87,7 @@ h3 {
 }
 
 #bug {
+	top: 4px;
 	width: 200px;
 	height: 100%;
 	left: 600px;
@@ -100,6 +95,7 @@ h3 {
 }
 
 #technical {
+	top: 4px;
 	width: 200px;
 	height: 100%;
 	left: 800px;
@@ -107,6 +103,7 @@ h3 {
 }
 
 #todo {
+	top: 4px;
 	width: 400px;
 	height: 100%;
 	left: 1000px;
@@ -114,6 +111,7 @@ h3 {
 }
 
 #development {
+	top: 4px;
 	width: 600px;
 	height: 100%;
 	left: 1400px;
@@ -121,6 +119,7 @@ h3 {
 }
 
 #test {
+	top: 4px;
 	width: 200px;
 	height: 800px;
 	left: 1800px;
@@ -128,6 +127,7 @@ h3 {
 }
 
 #done {
+	top: 4px;
 	width: 400px;
 	height: 100%;
 	left: 2000px;
@@ -135,6 +135,7 @@ h3 {
 }
 
 #qualification {
+	top: 4px;
 	width: 200px;
 	height: 100%;
 	left: 2400px;
@@ -142,6 +143,7 @@ h3 {
 }
 
 #preproduction {
+	top: 4px;
 	width: 200px;
 	height: 100%;
 	left: 2600px;
@@ -149,6 +151,7 @@ h3 {
 }
 
 #production {
+	top: 4px;
 	width: 200px;
 	height: 100%;
 	left: 2800px;
@@ -185,7 +188,7 @@ h3 {
 }
 
 .edit-task {
-    border: solid 1px black;
+    border: 4px solid #5F9EA0;
     position: fixed;
     left: 50%;
     top: 50%;
@@ -195,7 +198,7 @@ h3 {
     margin-top: -300px;
     width: 1000px;
     margin-left: -500px;
-    box-shadow: 3px 3px 4px 0px black;
+    box-shadow: 3px 3px 4px 0px #444;
 }
 
 .left-panel {
@@ -219,7 +222,7 @@ h3 {
 }
 
 .notes {
-	width: 470px;
+	width: 488px;
 	height: 470px;
 	overflow: auto;
 	border: 1px solid #BBB;
@@ -240,7 +243,7 @@ h3 {
 	position: absolute;
 	width: 3000px;
 	height: 100%;
-	background-color: #333333;
+	background-color: #5F9EA0;
 	z-index: 99;
 	opacity: 0.5;
 }
@@ -248,6 +251,9 @@ h3 {
 .edit-task label {
 	display: block;
 	margin: 5px 0px;
+	font-size: 20px;
+	color: #5F9EA0;
+	font-weight: bold;
 }
 
 .edit-task .title {
@@ -256,48 +262,66 @@ h3 {
 	font-family: Arial;
 }
 
+.save-button {
+	font-size: 18px;
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
+	color: #FFF;
+	background-color: #5F9EA0;
+	border: 4px solid #5F9EA0;
+	font-weight: bold;
+	min-width: 100px;
+}
+
+.close-button {
+	font-size: 18px;
+	font-weight: bold;
+	position: absolute;
+	width: 10px;
+	top: 4px;
+	right: 16px;
+	color: #5F9EA0;
+	background-color: #FFF;
+	border: 0px solid #5F9EA0;
+}
+
 .menu {
 	position: fixed;
 	left: 50%;
 	bottom: 10px;
 	width: 600px;
 	margin-left: -300px;
-	height: 60px;
-	border: 1px solid black;
+	height: 40px;
+	border: 4px solid #5F9EA0;
 	z-index: 50;
-	background-color: #BBB;
-	box-shadow: 2px 2px 4px 0px black;
+	box-shadow: 2px 2px 4px 0px #444;
 }
 
-button {
+.archive, .trash, .new-task {
+	position: absolute;
+	top: 4px;
+	width: 150px;
+	height: 25px;
+	line-height: 25px;
 	font-size: 18px;
-	min-width: 100px;
+	font-weight: bold;
+	background-color: #5F9EA0;
+	border: 4px solid #5F9EA0;
+	color: #FFF;
+	text-align: center;
 }
 
-button[type='button']:last-child {
-	font-weight: bold;
-	color: #FFF;
-	background-color: #F50;
+.new-task {
+	left: 5px;
 }
 
 .archive {
-	position: absolute;
-	right: 100px;
-	display: inline-block;
-	margin: 10px;
-	width: 150px;
-	background-color: #f39c12;
-	border: 1px solid black;
+	right: 170px;
 }
 
 .trash {
-	position: absolute;
-	right: 0px;
-	display: inline-block;
-	margin: 10px;
-	width: 100px;
-	background-color: #EC644B;
-	border: 1px solid black;
+	right: 5px;
 }
 
 .admin {
@@ -338,4 +362,45 @@ button[type='button']:last-child {
 .impediment {
 	background-color: #EC644B;
 	border: 1px solid #91220F;
+}
+
+@font-face {
+    font-family: 'icomoon';
+    src:    url('/fonts/icomoon.eot?mumf5l');
+    src:    url('/fonts/icomoon.eot?mumf5l#iefix') format('embedded-opentype'),
+        url('/fonts/icomoon.ttf?mumf5l') format('truetype'),
+        url('/fonts/icomoon.woff?mumf5l') format('woff'),
+        url('/fonts/icomoon.svg?mumf5l#icomoon') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'icomoon' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-file-empty:before {
+    content: "\e900";
+    margin-right: 3px;
+    font-weight: normal;
+}
+.icon-folder:before {
+    content: "\e901";
+    margin-right: 3px;
+    font-weight: normal;
+}
+.icon-bin:before {
+    content: "\e902";
+    margin-right: 3px;
+    font-weight: normal;
 }
