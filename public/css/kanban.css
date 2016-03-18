@@ -31,15 +31,6 @@ h3 {
 	margin: 3px 10px;
 }
 
-.sticker {
-	width: 20px;
-	height: 20px;
-	background-color: #440044;
-	border: 1px solid #000;
-	position: absolute;
-	left: -20px;
-	top: 5px;
-}
 
 .kanban {
 	position: relative;
@@ -258,6 +249,10 @@ h3 {
 	opacity: 0.5;
 }
 
+.edit-task .task {
+	position: relative;
+}
+
 .edit-task label {
 	display: block;
 	margin: 5px 0px;
@@ -342,6 +337,8 @@ h3 {
 	right: 5px;
 }
 
+/*Categories*/
+
 .admin {
 	background-color: #3498db;
 	border: 1px solid #114364;
@@ -381,6 +378,70 @@ h3 {
 	background-color: #EC644B;
 	border: 1px solid #91220F;
 }
+
+/* stickers */
+
+.sticker {
+	width: 20px;
+	height: 20px;
+	border: 0px solid #000;
+	position: absolute;
+	left: 148px;
+	margin-top: 1px;
+	opacity: 0.8;
+}
+
+.sticker.none {
+	display: none;
+}
+
+.none {
+	background-color: white;
+}
+
+.blue {
+	background-color: aqua;
+}
+
+.red {
+	background-color: red;
+}
+
+.yellow {
+	background-color: yellow;
+}
+
+.purple {
+	background-color: purple;
+	color: #FFF;
+}
+
+.green {
+	background-color: green;
+}
+
+.brown {
+	background-color: brown;
+}
+
+.pink {
+	background-color: pink;
+}
+
+.orange {
+	background-color: orange;
+}
+
+.black {
+	background-color: black;
+	color: #FFF;
+}
+
+.fade {
+	opacity: 0.5;
+}
+
+
 
 @font-face {
     font-family: 'icomoon';

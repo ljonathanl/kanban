@@ -28,9 +28,9 @@
         :class="{dragged: dragged}"
         :style="{left: model.x + 'px', top: model.y + 'px'}">
         <div class="task-content" :class="background">
+          <div v-if="model.sticker" class="sticker" :class="model.sticker" @click.stop="toggleSticker"></div>
           <h3>{{model.title}}</h3>
         </div>
-        <div v-if="model.sticker" class="sticker"></div> 
         <div v-if="model.task" @dragstart.stop="handleDragStart">
           <task :model="model.task" class="innerTask"/>
         </div>
@@ -48,15 +48,24 @@
             </p>
             <p>
               <label>Title</label>
-              <div class="task-content" :class="task.category">
-                <h3 contenteditable="true" v-el:title @blur="endEditTitle">{{task.title}}</h3>
+              <div class="task">
+                <div class="task-content" :class="task.category">
+                  <div v-if="task.sticker" class="sticker" :class="task.sticker"></div>  
+                  <h3 contenteditable="true" v-el:title @blur="endEditTitle">{{task.title}}</h3>
+                </div>
               </div> 
-              <!-- <textarea class="title" v-model="task.title" v-el:title></textarea> -->
             </p>
             <p>
               <label>Category</label>
               <select v-model="task.category" :class="task.category">
                 <option v-for="category in categories" :class="category">{{category}}</option>
+              </select>
+            </p>
+            <p>
+              <label>Sticker</label>
+              <select v-model="task.sticker" :class="task.sticker">
+                <option :selected="!task.sticker" class="none">none</option>
+                <option v-for="sticker in stickers" :class="sticker">{{sticker}}</option>
               </select>
             </p>
             <p><label>Zones</label>{{zones}}</p>
@@ -125,7 +134,7 @@
 
     <menu></menu>
 
-    <edit-task :task="currentTask" :categories="categories"></edit-task>
+    <edit-task :task="currentTask" :categories="categories" :stickers="stickers"></edit-task>
 
     <script src="js/kanban.js"></script>
   </body>

@@ -3,10 +3,12 @@ var kanban = {
   archive: [],
   currentTask: null,
   ready: false,
-  categories: ["admin", "developer", "partner", "db", "impediment", "bug", "release", "other"]  
+  categories: ["admin", "developer", "partner", "db", "impediment", "bug", "release", "other"],
+  stickers: ["blue", "red", "yellow", "purple", "green", "brown", "pink", "orange", "black"],
+  currentSticker: null
 };
 
-var editableProperties = {'title': true, 'category': true, 'notes': true};
+var editableProperties = {'title': true, 'category': true, 'notes': true, 'sticker': true};
 
 var items = {};
 
@@ -257,7 +259,7 @@ Vue.component('task', {
   },
   computed: {
     background: function() {
-      return this.model.category + (this.selected ? " selected" : ""); 
+      return this.model.category + (this.selected ? " selected" : "") + (kanban.currentSticker && kanban.currentSticker != this.model.sticker ? " fade" : ""); 
     },
   },
   methods: {
@@ -310,6 +312,13 @@ Vue.component('task', {
     },
     edit: function() {
       showTask(this.model.id);
+    },
+    toggleSticker: function() {
+      if (kanban.currentSticker == this.model.sticker) {
+        kanban.currentSticker = null;
+      } else {
+        kanban.currentSticker = this.model.sticker;
+      }
     }
   }
 })
@@ -403,13 +412,17 @@ Vue.component('edit-task', {
   props: {
     task: null,
     categories: Array,
-    editingNotes: Boolean
+    editingNotes: Boolean,
+    stickers: Array
   }, 
   methods: {
     edit: function() {
       var originalTask = items[this.task.id];
       var properties = {};
       var hasChanged = false;
+      if (this.task.sticker == "none") {
+        this.task.sticker = null;
+      }
       this.finishEditNotes();
       for (var k in editableProperties) {
         if (originalTask[k] != this.task[k]) {
