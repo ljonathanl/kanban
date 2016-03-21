@@ -320,8 +320,6 @@ Vue.component('archive', {
   },
 })
 
-var editor;
-
 Vue.component('edit-task', {
   template: '#edit-task-template',
   props: {
@@ -361,17 +359,9 @@ Vue.component('edit-task', {
     },
     startEditNotes: function() {
       this.editingNotes = true;
-      Vue.nextTick(function () {
-        editor = CKEDITOR.replace('notes-editor');
-        editor.config.height = 300;
-      });
     },
     finishEditNotes: function() {
-      if (editor) {
-        Vue.set(this.task, "notes", editor.getData());
-        editor = null;
-        this.editingNotes = false;
-      }
+      this.editingNotes = false;
     },
     endEditTitle: function() {
       this.task.title = this.$els.title.innerText;

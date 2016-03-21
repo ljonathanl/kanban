@@ -75,7 +75,7 @@
               <label>Notes</label>
               <div v-if="!editingNotes" class="notes" @dblclick="startEditNotes">{{{task.notes ? task.notes : 'Double click to edit notes'}}}</div>
               <div v-else>
-                <textarea class="notes" v-model="task.notes" name="notes-editor" id="notes-editor"></textarea>
+                <textarea class="notes" v-rich-editor="task.notes" name="notes-editor" id="notes-editor"></textarea>
               </div>
             </p>  
           </div>

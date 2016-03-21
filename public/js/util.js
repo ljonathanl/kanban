@@ -108,4 +108,29 @@ Vue.directive('drag-source', {
     this.el.removeEventListener('dragend', this.handleDragEnd);
   }
 });
+
+Vue.directive('rich-editor', {
+  twoWay: true,
+
+  bind: function () {
+    this.onChange = function() {
+      this.set(this.editor.getData());
+    }.bind(this);
+    this.setUpEditor = function () {
+      this.editor = CKEDITOR.replace(this.el.id);
+      this.editor.config.height = 300;
+      this.editor.on('change', this.onChange);
+    }.bind(this);
+    Vue.nextTick(this.setUpEditor);
+  },
+
+  update: function (value) {
+    if (!this.editor) return Vue.nextTick(this.update.bind(this, value));
+    this.editor.setData(value);
+  },
+
+  unbind: function () {
+    this.editor.destroy();
+  }
+})
   
