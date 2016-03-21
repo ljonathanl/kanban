@@ -9,15 +9,19 @@ function remove(items, item) {
 	}
 }
 
+function removeFrom(item, fromId) {
+  if (fromId == 'kanban') {
+    remove(kanban.items, item);
+  } else if (items[fromId]) {
+    items[fromId].task = null;
+  }
+}
+
 var actions = {
   move: function(action) {
     console.log(action);
     var movedItem = items[action.id];
-    if (action.from == 'kanban') {
-      remove(kanban.items, movedItem);
-    } else if (items[action.from]) {
-      items[action.from].task = null;
-    }
+    removeFrom(movedItem, action.from);
     kanban.items.push(movedItem);
     movedItem.x = action.to.x;
     movedItem.y = action.to.y; 
@@ -27,11 +31,7 @@ var actions = {
     console.log(action);
     var movedItem = items[action.id];
     var container = items[action.to];
-    if (action.from == 'kanban') {
-      remove(kanban.items, movedItem);
-    } else if (items[action.from]) {
-      items[action.from].task = null;
-    }
+    removeFrom(movedItem, action.from);
     if (container.task) {
       var lastTask = movedItem;
       while (lastTask.task) {
@@ -52,22 +52,14 @@ var actions = {
   archive: function(action) {
     console.log(action);
     var movedItem = items[action.id];
-    if (action.from == 'kanban') {
-      remove(kanban.items, movedItem);
-    } else if (items[action.from]) {
-      items[action.from].task = null;
-    }
+    removeFrom(movedItem, action.from);
     movedItem.parent = null;
     kanban.archive.push(movedItem);
   },
   remove: function(action) {
     console.log(action);
     var movedItem = items[action.id];
-    if (action.from == 'kanban') {
-      remove(kanban.items, movedItem);
-    } else if (items[action.from]) {
-      items[action.from].task = null;
-    }
+    removeFrom(movedItem, action.from);
     var subTask = movedItem;
     while (subTask) {
       delete items[subTask.id];

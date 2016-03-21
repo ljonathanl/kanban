@@ -30,9 +30,6 @@ function createSocket(path) {
   return socket;
 }
 
-
-
-
 Vue.directive('drop-target', {
   params: [
     'accept-drop',

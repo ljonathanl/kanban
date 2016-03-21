@@ -54,14 +54,18 @@ function getZones(id) {
   return result;
 }
 
+function removeFrom(item, fromId) {
+  if (fromId == 'kanban') {
+    kanban.items.$remove(item);
+  } else if (items[fromId]) {
+    items[fromId].task = null;
+  }
+}
+
 var actions = {
   move: function(action) {
     var movedItem = items[action.id];
-    if (action.from == 'kanban') {
-      kanban.items.$remove(movedItem);
-    } else if (items[action.from]) {
-      items[action.from].task = null;
-    }
+    removeFrom(movedItem, action.from);
     kanban.items.push(movedItem);
     movedItem.x = action.to.x;
     movedItem.y = action.to.y; 
@@ -70,11 +74,7 @@ var actions = {
   add: function(action) {
     var movedItem = items[action.id];
     var container = items[action.to];
-    if (action.from == 'kanban') {
-      kanban.items.$remove(movedItem);
-    } else if (items[action.from]) {
-      items[action.from].task = null;
-    }
+    removeFrom(movedItem, action.from);
     if (container.task) {
       var lastTask = movedItem;
       while (lastTask.task) {
@@ -96,21 +96,13 @@ var actions = {
   },
   archive: function(action) {
     var movedItem = items[action.id];
-    if (action.from == 'kanban') {
-      kanban.items.$remove(movedItem);
-    } else if (items[action.from]) {
-      items[action.from].task = null;
-    }
+    removeFrom(movedItem, action.from);
     Vue.set(movedItem, 'parent', null);
     kanban.archive.push(movedItem);
   },
   remove: function(action) {
     var movedItem = items[action.id];
-    if (action.from == 'kanban') {
-      kanban.items.$remove(movedItem);
-    } else if (items[action.from]) {
-      items[action.from].task = null;
-    }
+    removeFrom(movedItem, action.from);
     var subTask = movedItem;
     while (subTask) {
       delete items[subTask.id];
@@ -230,12 +222,6 @@ Vue.component('task', {
       dragTemp.y = event.offsetY;
     },
     drop: function(event) {
-      var task = items[dragTemp.item];
-      while (task) {
-        if (task.id == this.model.id) return false;
-        task = task.task;
-      }
-      event.stopPropagation();
       var item = dragTemp.item;
       var lastContainer = dragTemp.from;
       
