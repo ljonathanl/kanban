@@ -38,41 +38,28 @@ Vue.directive('drop-target', {
   bind: function () {
     this.handleDragOver = function(e) {
       if (typeof(this.vm[this.params.acceptDrop]) === 'function') {
-        var dropAllowed = this.vm[this.params.acceptDrop].call(this, e.target);
-        if (dropAllowed) {
-          e.preventDefault();
-        } else {
-          return false;
-        }
-      } else if(e.preventDefault) {
-        // allows dropping
-        e.preventDefault();
-      }
-      event.stopPropagation();
+        var dropAllowed = this.vm[this.params.acceptDrop].call(this, e);
+        if (!dropAllowed) return false;
+      } 
+      e.preventDefault();
+      e.stopPropagation();
       e.dataTransfer.dropEffect = 'move';
       this.el.classList.add('drag-over');
       return false;
     }.bind(this);
     this.handleDragLeave = function(e) {
-      event.stopPropagation();
+      e.stopPropagation();
       this.el.classList.remove('drag-over');
     }.bind(this);
     this.handleDrop = function(e) {
       if (typeof(this.vm[this.params.acceptDrop]) === 'function') {
-        var dropAllowed = this.vm[this.params.acceptDrop].call(this, e.target);
-        if (dropAllowed) {
-          e.stopPropagation();
-        } else {
-          return false;
-        }
-      } else if (e.stopPropagation) {
-        // stops the browser from redirecting.
-        e.stopPropagation();
+        var dropAllowed = this.vm[this.params.acceptDrop].call(this, e);
+        if (!dropAllowed) return false;
       }
-      
+      e.preventDefault(); 
+      e.stopPropagation();
       if (typeof(this.vm[this.params.drop]) === 'function') {
-        //var el = (e.target.draggable) ? e.target : e.target.parentElement;
-        this.vm[this.params.drop].call(this, event);
+        this.vm[this.params.drop].call(this, e);
       }
       this.el.classList.remove('drag-over');
       return false;
@@ -100,7 +87,7 @@ Vue.directive('drag-source', {
       e.target.classList.add('dragging');
       e.dataTransfer.effectAllowed = 'move';
       // Need to set to something or else drag doesn't start
-      e.dataTransfer.setData('text', '*');
+      e.dataTransfer.setData('fake', '*');
       if (typeof(this.vm[this.params.dragStart]) === 'function') {
         this.vm[this.params.dragStart].call(this, e);
       }

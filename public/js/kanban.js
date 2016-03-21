@@ -142,9 +142,17 @@ socket.on('data', function (data) {
 var dragTemp = null;
 
 
-function getDropPosition(event, container, offsetX, offsetY) {
-  var x = event.clientX - offsetX + window.scrollX;
-  var y = event.clientY - offsetY  + window.scrollY;  
+function getDropPosition(event, offsetX, offsetY) {
+  var node = event.target;
+  var nodeOffsetX = 0; 
+  var nodeOffsetY = 0;
+  while (node != document) {
+    nodeOffsetX += node.clientLeft;
+    nodeOffsetY += node.clientTop;
+    node = node.parentNode;
+  }
+  var x = event.clientX - (offsetX + nodeOffsetX) + window.scrollX;
+  var y = event.clientY - (offsetY + nodeOffsetY) + window.scrollY;  
   return {x: x, y: y};
 }
 
@@ -165,8 +173,6 @@ function showTask(id) {
     window.location.hash = id;
   }
 }
-
-Vue.config.debug = true;
 
 Vue.component('kanban', {
   template: '#kanban-template',
@@ -189,7 +195,7 @@ Vue.component('kanban', {
       if (dragTemp.from != 'kanban') {
         offsetX = offsetY = 0;
       }
-      var position = getDropPosition(event, this.$els.contents, dragTemp.x, dragTemp.y);
+      var position = getDropPosition(event, dragTemp.x, dragTemp.y);
       var lastContainer = dragTemp.from;
       dragTemp = null;
       var action = {
@@ -268,9 +274,8 @@ Vue.component('zone', {
 Vue.component('menu', {
   template: '#menu-template',
   methods: {
-    drag: function(event) {
+    dragStart: function(event) {
       // for firefox
-      event.dataTransfer.setData('id', 'new');
       dragTemp = {};
       dragTemp.item = "new";
       dragTemp.from = "menu";

@@ -17,8 +17,7 @@
         <slot></slot>
         <div v-drop-target drop="drop"
           v-drag-source drag-start="dragStart"
-          class="contents" v-el:contents
-          :class="{selected: selected}">
+          class="contents">
           <task v-for="item in items" :model="item"/>
         </div>
       </div>  

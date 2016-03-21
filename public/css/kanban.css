@@ -7,6 +7,8 @@ html, body {
 
 .task {
 	position: absolute;
+	cursor: -webkit-grab;
+	cursor: grab;
 }
 
 .task-content {
@@ -35,6 +37,7 @@ h3 {
 	position: relative;
 	width: 3000px;
 	height: 1000px;
+	border: 4px solid #5F9EA0;
 	margin-bottom: 100px;
 }
 
@@ -44,11 +47,10 @@ h3 {
 	width: 100%;
 	top: 0;
 	left: 0;
-	border: 4px solid #5F9EA0;
 }
 
 .drag-over {
-	outline: 1px solid #F00;
+	outline: 2px solid #F00;
 }
 
 .dragging {
@@ -79,7 +81,7 @@ h3 {
 }
 
 #backlog {
-	top: 4px;
+	top: 0px;
 	left: 0px;
 	border-right: dashed 2px #5F9EA0;
 	width: 600px;
@@ -87,7 +89,7 @@ h3 {
 }
 
 #bug {
-	top: 4px;
+	top: 0px;
 	width: 200px;
 	height: 100%;
 	left: 600px;
@@ -95,7 +97,7 @@ h3 {
 }
 
 #technical {
-	top: 4px;
+	top: 0px;
 	width: 200px;
 	height: 100%;
 	left: 800px;
@@ -103,7 +105,7 @@ h3 {
 }
 
 #todo {
-	top: 4px;
+	top: 0px;
 	width: 400px;
 	height: 100%;
 	left: 1000px;
@@ -111,7 +113,7 @@ h3 {
 }
 
 #development {
-	top: 4px;
+	top: 0px;
 	width: 600px;
 	height: 100%;
 	left: 1400px;
@@ -119,7 +121,7 @@ h3 {
 }
 
 #test {
-	top: 4px;
+	top: 0px;
 	width: 200px;
 	height: 800px;
 	left: 1800px;
@@ -127,7 +129,7 @@ h3 {
 }
 
 #done {
-	top: 4px;
+	top: 0px;
 	width: 400px;
 	height: 100%;
 	left: 2000px;
@@ -135,7 +137,7 @@ h3 {
 }
 
 #qualification {
-	top: 4px;
+	top: 0px;
 	width: 200px;
 	height: 100%;
 	left: 2400px;
@@ -143,7 +145,7 @@ h3 {
 }
 
 #preproduction {
-	top: 4px;
+	top: 0px;
 	width: 200px;
 	height: 100%;
 	left: 2600px;
@@ -151,7 +153,7 @@ h3 {
 }
 
 #production {
-	top: 4px;
+	top: 0px;
 	width: 200px;
 	height: 100%;
 	left: 2800px;
@@ -326,6 +328,8 @@ h3 {
 
 .new-task {
 	left: 5px;
+	cursor: -webkit-grab;
+	cursor: grab;
 }
 
 .archive {
