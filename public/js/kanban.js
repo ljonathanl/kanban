@@ -99,16 +99,7 @@ var actions = {
     removeFrom(movedItem, action.from);
     Vue.set(movedItem, 'parent', null);
     kanban.archive.push(movedItem);
-  },
-  remove: function(action) {
-    var movedItem = items[action.id];
-    removeFrom(movedItem, action.from);
-    var subTask = movedItem;
-    while (subTask) {
-      delete items[subTask.id];
-      subTask = subTask.task;
-    }
-  },
+  }
 }
 
 function emit(type, action) {
@@ -120,10 +111,14 @@ var waiting = [];
 var socket = createSocket('/');
 
 socket.on('action', function (data) {
+  console.log(data.type, data.action);
   actions[data.type](data.action);
 });
 socket.on('show', function (data) {
   showTask(data);
+});
+socket.on('alert', function (data) {
+  alert(data);
 });
 socket.on('data', function (data) {
   console.log('data', data);
@@ -285,24 +280,6 @@ Vue.component('menu', {
   }
 })
 
-Vue.component('trash', {
-  template: '#trash-template',
-  methods: {
-    drop: function(event) {
-      var item = dragTemp.item;
-      var lastContainer = dragTemp.from;
-      
-      dragTemp = null;
-      var action = {
-        id: item,
-        from: lastContainer   
-      };
-
-      emit('remove', action);
-    },
-  },
-})
-
 Vue.component('archive', {
   template: '#archive-template',
   methods: {
@@ -377,7 +354,6 @@ Vue.component('edit-task', {
     this.$watch('task', function (val) {
       if (val && val.title == "New task") {
         this.$els.title.focus();
-        document.execCommand('selectAll', false, null);
       }
     })
   }

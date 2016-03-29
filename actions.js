@@ -19,7 +19,6 @@ function removeFrom(item, fromId) {
 
 var actions = {
   move: function(action) {
-    console.log(action);
     var movedItem = items[action.id];
     removeFrom(movedItem, action.from);
     kanban.items.push(movedItem);
@@ -28,7 +27,6 @@ var actions = {
     movedItem.parent = null;
   },
   add: function(action) {
-    console.log(action);
     var movedItem = items[action.id];
     var container = items[action.to];
     removeFrom(movedItem, action.from);
@@ -43,29 +41,17 @@ var actions = {
     movedItem.parent = container.id;
   },
   update: function(action) {
-    console.log(action);
     var updatedItem = items[action.id];
     for (var k in action.properties) {
       updatedItem[k] = action.properties[k];   
     }
   },
   archive: function(action) {
-    console.log(action);
     var movedItem = items[action.id];
     removeFrom(movedItem, action.from);
     movedItem.parent = null;
     kanban.archive.push(movedItem);
   },
-  remove: function(action) {
-    console.log(action);
-    var movedItem = items[action.id];
-    removeFrom(movedItem, action.from);
-    var subTask = movedItem;
-    while (subTask) {
-      delete items[subTask.id];
-      subTask = subTask.task;
-    }
-  },  
 }
 
 module.exports = exports = actions;
