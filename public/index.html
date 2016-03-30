@@ -7,8 +7,8 @@
     <title>Kanban</title>
     <link href="css/kanban.css" rel="stylesheet">
     <script src="js/vue.js"></script>
-    <script src="js/util.js"></script>
     <script src="js/ckeditor/ckeditor.js"></script>
+    <script src="js/util.js"></script>
     <script src="/socket.io/socket.io.js"></script>
   </head>
   <body>
@@ -38,51 +38,49 @@
     </script>
 
     <script type="text/x-template" id="edit-task-template">
-      <template v-if="task != null">
-        <div class="popup-background" @click.stop="finishEditNotes"></div>
-        <div class="edit-task">
-          <div class="left-panel">
-            <p>
-              <label>ID</label>
-              <input type="text" v-model="task.id" disabled>
-            </p>
-            <p>
-              <label>Title</label>
-              <div class="task">
-                <div class="task-content" :class="task.category">
-                  <div v-if="task.sticker" class="sticker" :class="task.sticker"></div>  
-                  <h3 contenteditable="true" v-el:title @blur="endEditTitle">{{task.title}}</h3>
-                </div>
-              </div> 
-            </p>
-            <p>
-              <label>Category</label>
-              <select v-model="task.category" :class="task.category">
-                <option v-for="category in categories" :class="category">{{category}}</option>
-              </select>
-            </p>
-            <p>
-              <label>Sticker</label>
-              <select v-model="task.sticker" :class="task.sticker">
-                <option :selected="!task.sticker" class="none">none</option>
-                <option v-for="sticker in stickers" :class="sticker">{{sticker}}</option>
-              </select>
-            </p>
-            <p><label>Zones</label>{{zones}}</p>
-          </div>
-          <div class="right-panel" @click.stop>
-            <p>
-              <label>Notes</label>
-              <div v-if="!editingNotes" class="notes" @dblclick="startEditNotes">{{{task.notes ? task.notes : 'Double click to edit notes'}}}</div>
-              <div v-else>
-                <textarea class="notes" v-rich-editor="task.notes" name="notes-editor" id="notes-editor"></textarea>
+      <div v-show="editTask" class="popup-background" @click.stop="finishEditNotes"></div>
+      <div v-show="editTask" class="edit-task">
+        <div class="left-panel">
+          <p>
+            <label>ID</label>
+            <input type="text" v-model="currentTask.id" disabled>
+          </p>
+          <p>
+            <label>Title</label>
+            <div class="task">
+              <div class="task-content" :class="currentTask.category">
+                <div v-if="currentTask.sticker" class="sticker" :class="currentTask.sticker"></div>  
+                <h3 contenteditable="true" v-el:title @blur="endEditTitle">{{currentTask.title}}</h3>
               </div>
-            </p>  
-          </div>
-          <button type="button" class="close-button" @click="close">X</button>
-          <button type="button" class="save-button" @click="edit">Save</button>
+            </div> 
+          </p>
+          <p>
+            <label>Category</label>
+            <select v-model="currentTask.category" :class="currentTask.category">
+              <option v-for="category in categories" :class="category">{{category}}</option>
+            </select>
+          </p>
+          <p>
+            <label>Sticker</label>
+            <select v-model="currentTask.sticker" :class="currentTask.sticker">
+              <option :selected="!currentTask.sticker" class="none">none</option>
+              <option v-for="sticker in stickers" :class="sticker">{{sticker}}</option>
+            </select>
+          </p>
+          <p><label>Zones</label>{{zones}}</p>
         </div>
-      </template>  
+        <div class="right-panel" @click.stop>
+          <p>
+            <label>Notes</label>
+            <div v-show="!editingNotes" class="notes" @dblclick="startEditNotes">{{{currentTask.notes ? currentTask.notes : 'Double click to edit notes'}}}</div>
+            <div v-show="editingNotes">
+              <textarea class="notes" v-rich-editor="currentTask.notes" name="notes-editor" id="notes-editor"></textarea>
+            </div>
+          </p>  
+        </div>
+        <button type="button" class="close-button" @click="close">X</button>
+        <button type="button" class="save-button" @click="edit">Save</button>
+      </div>
     </script>
 
     <script type="text/x-template" id="archive-template">
@@ -98,7 +96,6 @@
           <span class="icon-file-empty"></span>New task
         </div>
         <archive></archive>
-        <trash></trash>
       </div>
     </script>
 
@@ -127,7 +124,7 @@
 
     <menu></menu>
 
-    <edit-task :task="currentTask" :categories="categories" :stickers="stickers"></edit-task>
+    <edit-task></edit-task>
 
     <script src="js/kanban.js"></script>
   </body>

@@ -13,8 +13,7 @@ app.use(bodyParser.json());
 io.on('connection', function (socket) {
   socket.emit('data', data.kanban);
   socket.on('action', function (actionData) {
-    console.log("action: ", new Date().getTime());
-    console.log(actionData);
+    console.log(new Date().toISOString(), JSON.stringify(actionData));
     if (actionData.action.from && actionData.action.from == "menu") {
       var show = false;
       if (actionData.action.id == "new") {
@@ -23,7 +22,9 @@ io.on('connection', function (socket) {
       }
       var newTask = {title: "New task", id: actionData.action.id, x: 0, y: 0, category: "other"};
       data.items[actionData.action.id] = newTask;
-      io.sockets.emit('action', {type: 'create', action: newTask});
+      var action = {type: 'create', action: newTask};
+      console.log(new Date().toISOString(), JSON.stringify(action));
+      io.sockets.emit('action', action);
       if (show) {
         socket.emit('show', actionData.action.id);
       }
@@ -34,7 +35,12 @@ io.on('connection', function (socket) {
     } 
     actions[actionData.type](actionData.action);
     io.sockets.emit('action', actionData);
-    data.save();
+    try {
+      data.save();
+    } catch (e) {
+      console.log(e);
+      socket.emit('alert', "Error on server please contact the administrator");
+    }
   });
 });
 
@@ -43,12 +49,12 @@ app.get('/', function (req, res) {
 });
 
 app.get('/kanban.json', function (req, res) {
-  console.log("load: ", new Date().getTime());
-  res.json(data.kanban);  
+  console.log(new Date().toISOString(), "load");
+  res.json(data.getStoredKanban());  
 });
 
 app.post('/kanban.json', function (req, res) {
-  console.log("save: ", new Date().getTime());
+  console.log(new Date().toISOString(), "save");
   var kanban = req.body;
   data.load(kanban);
   io.sockets.emit('data', data.kanban);

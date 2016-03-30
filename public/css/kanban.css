@@ -252,6 +252,7 @@ h3 {
 
 .edit-task .task {
 	position: relative;
+	cursor: auto;
 }
 
 .edit-task label {
@@ -312,7 +313,7 @@ h3 {
 	box-shadow: 2px 2px 4px 0px #444;
 }
 
-.archive, .trash, .new-task {
+.archive, .new-task {
 	position: absolute;
 	top: 4px;
 	width: 150px;
@@ -333,10 +334,6 @@ h3 {
 }
 
 .archive {
-	right: 170px;
-}
-
-.trash {
 	right: 5px;
 }
 

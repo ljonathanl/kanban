@@ -1,11 +1,14 @@
+var defaultTask = {id: "default"};
+
 var kanban = {
   items: [],
   archive: [],
-  currentTask: null,
+  currentTask: defaultTask,
   ready: false,
   categories: ["admin", "developer", "partner", "db", "impediment", "bug", "release", "other"],
   stickers: ["blue", "red", "yellow", "purple", "green", "brown", "pink", "orange", "black"],
-  currentSticker: null
+  currentSticker: null,
+  editTask: false
 };
 
 var editableProperties = {'title': true, 'category': true, 'notes': true, 'sticker': true};
@@ -162,9 +165,11 @@ function showTask(id) {
   var task = items[id];
   if (!task) {
     history.pushState("", document.title, window.location.pathname);
-    kanban.currentTask = null;
+    kanban.editTask = false;
+    kanban.currentTask = defaultTask;
   } else {
     kanban.currentTask = clone(task);
+    kanban.editTask = true;
     window.location.hash = id;
   }
 }
@@ -300,29 +305,29 @@ Vue.component('archive', {
 Vue.component('edit-task', {
   template: '#edit-task-template',
   props: {
-    task: null,
-    categories: Array,
     editingNotes: Boolean,
-    stickers: Array
-  }, 
+  },
+  data: function() {
+    return kanban;
+  },
   methods: {
     edit: function() {
-      var originalTask = items[this.task.id];
+      var originalTask = items[this.currentTask.id];
       var properties = {};
       var hasChanged = false;
-      if (this.task.sticker == "none") {
-        this.task.sticker = null;
+      if (this.currentTask.sticker == "none") {
+        this.currentTask.sticker = null;
       }
       this.finishEditNotes();
       for (var k in editableProperties) {
-        if (originalTask[k] != this.task[k]) {
-          properties[k] = this.task[k];
+        if (originalTask[k] != this.currentTask[k]) {
+          properties[k] = this.currentTask[k];
           hasChanged = true;
         }
       }
       if (hasChanged) {
         var action = {
-          id: this.task.id,
+          id: this.currentTask.id,
           properties: properties  
         }
         emit('update', action);
@@ -341,17 +346,17 @@ Vue.component('edit-task', {
       this.editingNotes = false;
     },
     endEditTitle: function() {
-      this.task.title = this.$els.title.innerText;
+      this.currentTask.title = this.$els.title.innerText;
     },
   },
   computed: {
     zones: function () {
-      if (!this.task) return "";
-      return getZones(this.task.id).join(", ");
-    }
+      if (!this.editTask) return "";
+      return getZones(this.currentTask.id).join(", ");
+    },
   },
   attached: function() {
-    this.$watch('task', function (val) {
+    this.$watch('currentTask', function (val) {
       if (val && val.title == "New task") {
         this.$els.title.focus();
       }

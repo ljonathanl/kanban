@@ -109,6 +109,8 @@ Vue.directive('drag-source', {
   }
 });
 
+CKEDITOR.disableAutoInline = true;
+
 Vue.directive('rich-editor', {
   twoWay: true,
 
