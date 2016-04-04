@@ -3,6 +3,10 @@ var Storage = require('node-storage');
 
 var store = new Storage(config.storage);
 
+function getStoredKanban() {
+  return store.get('kanban');
+}
+
 var kanban = store.get('kanban');
 
 if (!kanban) {
@@ -46,5 +50,6 @@ module.exports = exports = {
   kanban: kanban,
   items: items,
   save: save,
-  load: load 
+  load: load,
+  getStoredKanban: getStoredKanban 
 }

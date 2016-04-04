@@ -13,7 +13,6 @@ app.use(bodyParser.json());
 io.on('connection', function (socket) {
   socket.emit('data', data.kanban);
   socket.on('action', function (actionData) {
-    console.log(new Date().toISOString(), JSON.stringify(actionData));
     if (actionData.action.from && actionData.action.from == "menu") {
       var show = false;
       if (actionData.action.id == "new") {
@@ -33,6 +32,7 @@ io.on('connection', function (socket) {
       socket.emit('alert', "The task does not exist");
       return;
     } 
+    console.log(new Date().toISOString(), JSON.stringify(actionData));
     actions[actionData.type](actionData.action);
     io.sockets.emit('action', actionData);
     try {
