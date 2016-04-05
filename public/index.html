@@ -16,7 +16,7 @@
       <div class="kanban">
         <slot></slot>
         <div v-drop-target drop="drop"
-          v-drag-source drag-start="dragStart"
+          v-drag-source drag-start="dragStart" drag-end="dragEnd"
           class="contents">
           <task v-for="item in items" :model="item"/>
         </div>
@@ -31,7 +31,7 @@
           <div v-if="model.sticker" class="sticker" :class="model.sticker" @click.stop="toggleSticker"></div>
           <h3>{{model.title}}</h3>
         </div>
-        <div v-if="model.task" v-drag-source drag-start="dragStart">
+        <div v-if="model.task" v-drag-source drag-start="dragStart" drag-end="dragEnd">
           <task :model="model.task" class="innerTask"/>
         </div>
       </div>
@@ -91,7 +91,7 @@
     </script>
 
     <script type="text/x-template" id="menu-template">
-      <div class="menu" v-drag-source drag-start="dragStart">
+      <div class="menu" v-drag-source drag-start="dragStart" drag-end="dragEnd">
         <div class="new-task" draggable=true>
           <span class="icon-file-empty"></span>New task
         </div>

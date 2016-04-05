@@ -81,6 +81,7 @@ Vue.directive('drop-target', {
 Vue.directive('drag-source', {
   params: [
     'drag-start',
+    'drag-end'
   ],
   bind: function () {
     this.handleDragStart = function (e) {
@@ -96,6 +97,9 @@ Vue.directive('drag-source', {
 
     this.handleDragEnd = function(e) {
       e.target.classList.remove('dragging');
+      if (typeof(this.vm[this.params.dragEnd]) === 'function') {
+        this.vm[this.params.dragEnd].call(this, e);
+      }
     }.bind(this);
 
     // setup the listeners

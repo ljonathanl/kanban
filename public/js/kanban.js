@@ -188,6 +188,9 @@ Vue.component('kanban', {
       dragTemp.x = event.offsetX;
       dragTemp.y = event.offsetY;
     },
+    dragEnd: function(event) {
+      dragTemp = null;
+    },
     drop: function(event) {
       var item = dragTemp.item;
       var offsetX = dragTemp.x;
@@ -197,7 +200,6 @@ Vue.component('kanban', {
       }
       var position = getDropPosition(event, dragTemp.x, dragTemp.y);
       var lastContainer = dragTemp.from;
-      dragTemp = null;
       var action = {
         id: item,
         to: position,
@@ -230,14 +232,15 @@ Vue.component('task', {
     drop: function(event) {
       var item = dragTemp.item;
       var lastContainer = dragTemp.from;
-      
-      dragTemp = null;
       var action = {
         id: item,
         to: this.model.id,
         from: lastContainer  
       }
       emit('add', action);
+    },
+    dragEnd: function(event) {
+      dragTemp = null;
     },
     acceptDrop: function(event) {
       var task = items[dragTemp.item];
@@ -282,6 +285,9 @@ Vue.component('menu', {
       dragTemp.x = event.offsetX;
       dragTemp.y = event.offsetY;
     },
+    dragEnd: function(event) {
+      dragTemp = null;
+    }
   }
 })
 
